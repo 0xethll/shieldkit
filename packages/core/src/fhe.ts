@@ -5,6 +5,15 @@ import type { FhevmInstance } from '@zama-fhe/relayer-sdk/bundle'
 import { Signer } from 'ethers'
 
 /**
+ * Encrypted value with proof
+ * Returned after encrypting data for confidential computation
+ */
+export interface EncryptedValue {
+  handle: Uint8Array<ArrayBufferLike>
+  proof: Uint8Array<ArrayBufferLike>
+}
+
+/**
  * Initialize the FHE SDK
  * Must be called before using any FHE functionality
  */
@@ -27,7 +36,7 @@ export async function initializeFHE(): Promise<void> {
  * Requires window.ethereum to be available
  */
 export async function createFHEInstance(): Promise<FhevmInstance> {
-  if (typeof window === 'undefined' || !window.ethereum) {
+  if (typeof window === 'undefined' || !(window as any).ethereum) {
     throw new Error('Ethereum provider not available')
   }
 
@@ -39,7 +48,7 @@ export async function createFHEInstance(): Promise<FhevmInstance> {
 
   const config = {
     ...fheSdk.SepoliaConfig,
-    network: window.ethereum,
+    network: (window as any).ethereum,
   }
 
   return await fheSdk.createInstance(config)
@@ -53,17 +62,19 @@ export async function encryptUint64(
   contractAddress: string,
   userAddress: string,
   value: bigint,
-): Promise<{
-  handle: Uint8Array<ArrayBufferLike>
-  proof: Uint8Array<ArrayBufferLike>
-}> {
+): Promise<EncryptedValue> {
   const input = fheInstance.createEncryptedInput(contractAddress, userAddress)
   input.add64(value)
 
   const encryptedInput = await input.encrypt()
 
+  const handle = encryptedInput.handles[0]
+  if (!handle) {
+    throw new Error('Failed to encrypt: no handle returned')
+  }
+
   return {
-    handle: encryptedInput.handles[0],
+    handle,
     proof: encryptedInput.inputProof,
   }
 }
@@ -79,6 +90,9 @@ export async function decryptPublicly(
   const {clearValues, decryptionProof} = await fheInstance.publicDecrypt([ciphertext])
 
   const decryptedValue = clearValues[ciphertext as `0x${string}`]
+  if (decryptedValue === undefined) {
+    throw new Error('Failed to decrypt: no value returned')
+  }
   if (typeof decryptedValue === 'bigint') {
     return [decryptedValue, decryptionProof]
   }
@@ -116,11 +130,15 @@ export async function decryptForUser(
     durationDays,
   )
 
+  const userDecryptType = eip712.types.UserDecryptRequestVerification
+  if (!userDecryptType) {
+    throw new Error('UserDecryptRequestVerification type not found in EIP712 types')
+  }
+
   const signature = await signer.signTypedData(
     eip712.domain,
     {
-      UserDecryptRequestVerification:
-        eip712.types.UserDecryptRequestVerification,
+      UserDecryptRequestVerification: userDecryptType,
     },
     eip712.message,
   )
@@ -137,6 +155,9 @@ export async function decryptForUser(
   )
 
   const decryptedValue = result[ciphertextHandle as `0x${string}`]
+  if (decryptedValue === undefined) {
+    throw new Error('Failed to decrypt: no value returned')
+  }
   if (typeof decryptedValue === 'bigint') {
     return decryptedValue
   }

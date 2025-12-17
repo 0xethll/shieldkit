@@ -37,7 +37,7 @@ export class ConfidentialTokenFactorySDK {
 
   constructor(config: FactorySDKConfig) {
     this.factoryAddress = config.factoryAddress
-    this.provider = config.provider || (typeof window !== 'undefined' ? window.ethereum : null)
+    this.provider = config.provider || (typeof window !== 'undefined' ? (window as any).ethereum : null)
     this.chainId = config.chainId || 11155111 // Default to Sepolia
   }
 
