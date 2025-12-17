@@ -5,7 +5,8 @@
 ```
 z-payment/
 ├── apps/
-│   └── demo/                   # Demo application (Next.js)
+│   └── web/                   # Application (Next.js)
+│   └── exmaple/
 │
 ├── packages/
 │   ├── core/                  # @z-payment/core - Core SDK
@@ -172,14 +173,6 @@ cd packages/contracts && npm publish
 ```
 
 ## 🎯 Next Steps
-
-### Phase 6: Migrate Demo App to Use New Packages
-
-Currently, the demo app still uses its own implementations. Next step is to:
-
-1. Update `apps/demo` to import from `@z-payment/react`
-2. Remove duplicate code from `apps/demo/hooks/`
-3. Test all functionality
 
 ### Future Enhancements
 

@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "bun run --filter='demo' dev",
+    "dev": "bun run --filter='web' dev",
     "build": "bun run build:packages && bun run build:apps",
     "build:packages": "bun run --filter='./packages/*' build",
     "build:apps": "bun run --filter='./apps/*' build",
@@ -17,7 +17,7 @@
     "typecheck": "bun run --filter='*' typecheck",
     "lint": "bun run --filter='*' lint",
     "clean": "bun run --filter='*' clean && rm -rf node_modules",
-    "dev:demo": "bun run --filter='demo' dev",
+    "dev:web": "bun run --filter='web' dev",
     "dev:core": "bun run --filter='@z-payment/core' dev"
   },
   "devDependencies": {
