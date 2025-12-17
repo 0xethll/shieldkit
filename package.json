@@ -1,0 +1,46 @@
+{
+  "name": "z-payment",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Universal Private Payment Protocol - Transform any ERC20 token into confidential assets using Zama's FHE",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter='demo' dev",
+    "build": "bun run build:packages && bun run build:apps",
+    "build:packages": "bun run --filter='./packages/*' build",
+    "build:apps": "bun run --filter='./apps/*' build",
+    "test": "bun run --filter='./packages/*' test",
+    "test:contracts": "bun run --filter='@z-payment/contracts' test",
+    "typecheck": "bun run --filter='*' typecheck",
+    "lint": "bun run --filter='*' lint",
+    "clean": "bun run --filter='*' clean && rm -rf node_modules",
+    "dev:demo": "bun run --filter='demo' dev",
+    "dev:core": "bun run --filter='@z-payment/core' dev"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xethll/Z-Payment"
+  },
+  "keywords": [
+    "fhe",
+    "zama",
+    "privacy",
+    "confidential",
+    "erc20",
+    "erc7984",
+    "defi"
+  ],
+  "author": "devasher",
+  "license": "MIT"
+}

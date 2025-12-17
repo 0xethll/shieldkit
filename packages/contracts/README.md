@@ -1,29 +1,85 @@
-## Usage
+# @z-payment/contracts
 
-### Make a deployment to Sepolia
+Smart contracts, ABIs, and deployment addresses for Z-Payment.
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+## Contents
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+- ✅ **Solidity Contracts**: Source code for all contracts
+- 📜 **ABIs**: Contract ABIs for frontend integration
+- 🌐 **Addresses**: Deployed contract addresses by network
+- 🧪 **Tests**: Comprehensive test suite
 
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
+## Contracts
 
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
+### ConfidentialTokenFactory
 
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+Factory contract for creating confidential wrappers for any ERC20 token.
 
-npx hardhat keystore set SEPOLIA_RPC_URL
+```solidity
+function createConfidentialToken(address erc20Token)
+    external
+    returns (address confidentialToken)
 ```
 
-After setting the variable, you can run the deployment with the Sepolia network:
+### ConfidentialERC20Wrapper
 
-```shell
-npx hardhat ignition deploy --network sepolia ./ignition/modules/WrapperToken.ts --parameters ./ignition/parameters/WrapperToken.json
+Confidential ERC20 token wrapper implementing ERC7984 standard.
+
+- `wrap()`: Convert ERC20 to confidential tokens
+- `unwrap()`: Convert confidential tokens back to ERC20
+- `confidentialTransfer()`: Private transfers with encrypted amounts
+- `finalizeUnwrap()`: Complete unwrap with public decryption
+
+## Usage
+
+### In TypeScript/JavaScript
+
+```typescript
+import { CONTRACTS, CONTRACT_ADDRESSES, CHAIN_IDS } from '@z-payment/contracts'
+
+// Get contract ABI
+const factoryABI = CONTRACTS.ConfidentialTokenFactory.abi
+
+// Get contract address
+const factoryAddress = CONTRACT_ADDRESSES[CHAIN_IDS.SEPOLIA].ConfidentialTokenFactory
+```
+
+### Testing
+
+```bash
+# Run all tests
+bun run test
+
+# Run specific test
+bun run test:confidential
+
+# Coverage report
+bun run test:coverage
 ```
 
 ## Deployed Addresses
 
-USDModule#USDERC20 - 0xA9062b4629bc8fB79cB4eE904C5c9E179e9F492a
-cUSDX402Module#ConfidentialUSDX402 - 0xdCE9Fa07b2ad32D2E6C8051A895262C9914E9445
-ConfidentialTokenFactoryModule#ConfidentialTokenFactory - 0x08B2616Eb8F33700014fd53f143aFcaD1d6e512c
+### Sepolia Testnet
+
+- **ConfidentialTokenFactory**: `0x08B2616Eb8F33700014fd53f143aFcaD1d6e512c`
+- **cUSD (Example)**: `0xdCE9Fa07b2ad32D2E6C8051A895262C9914E9445`
+- **USD ERC20 (Test Token)**: `0xA9062b4629bc8fB79cB4eE904C5c9E179e9F492a`
+
+## Development
+
+### Build
+
+```bash
+bun run build
+```
+
+### Deploy
+
+```bash
+# Deploy to Sepolia
+npx hardhat run scripts/deploy.ts --network sepolia
+```
+
+## License
+
+MIT

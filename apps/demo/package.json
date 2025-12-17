@@ -1,12 +1,14 @@
 {
-  "name": "client",
+  "name": "demo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .next node_modules dist"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.85.3",

@@ -1,0 +1,40 @@
+{
+  "name": "@z-payment/core",
+  "version": "0.1.0",
+  "description": "Core SDK for Z-Payment - Framework-agnostic confidential token operations",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "echo 'Build not required for TypeScript source'",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "clean": "rm -rf node_modules dist"
+  },
+  "dependencies": {
+    "@z-payment/contracts": "workspace:*",
+    "@zama-fhe/relayer-sdk": "0.3.0-5",
+    "viem": "^2.34.0",
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.8.0"
+  },
+  "keywords": [
+    "fhe",
+    "zama",
+    "privacy",
+    "confidential",
+    "sdk"
+  ],
+  "author": "",
+  "license": "MIT"
+}
