@@ -1,31 +1,7 @@
-// TypeScript types for Z-Payment SDK
+// TypeScript types for Z-Payment
 
 import type { FhevmInstance } from '@zama-fhe/relayer-sdk/bundle'
 import type { Address, Hash } from 'viem'
-
-/**
- * SDK Configuration
- */
-export interface SDKConfig {
-  /** Address of the confidential token wrapper contract */
-  tokenAddress: Address
-  /** Ethereum provider (e.g., window.ethereum) */
-  provider?: any
-  /** Chain ID (default: 11155111 for Sepolia) */
-  chainId?: number
-}
-
-/**
- * Factory SDK Configuration
- */
-export interface FactorySDKConfig {
-  /** Address of the ConfidentialTokenFactory contract */
-  factoryAddress: Address
-  /** Ethereum provider (e.g., window.ethereum) */
-  provider?: any
-  /** Chain ID (default: 11155111 for Sepolia) */
-  chainId?: number
-}
 
 /**
  * Wrap operation parameters
@@ -161,20 +137,6 @@ export interface CreateWrapperResult {
   hash: Hash
   /** Address of newly created confidential token */
   wrapperAddress: Address
-}
-
-/**
- * Token metadata
- */
-export interface TokenMetadata {
-  /** Token name */
-  name: string
-  /** Token symbol */
-  symbol: string
-  /** Token decimals */
-  decimals: number
-  /** Underlying ERC20 address */
-  underlying: Address
 }
 
 /**

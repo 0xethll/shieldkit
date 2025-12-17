@@ -1,35 +1,31 @@
 /**
  * @z-payment/core
  *
- * Core SDK for Z-Payment - Framework-agnostic confidential token operations
+ * Core utilities and types for Z-Payment - Framework-agnostic FHE operations
  * Built on Zama's Fully Homomorphic Encryption (FHE) technology
  *
  * @example
  * ```typescript
- * import { ConfidentialTokenSDK } from '@z-payment/core'
+ * import { initializeFHE, createFHEInstance, encryptUint64 } from '@z-payment/core'
  *
- * const sdk = new ConfidentialTokenSDK({
- *   tokenAddress: '0x...',
- *   provider: window.ethereum
- * })
+ * // Initialize FHE
+ * await initializeFHE()
+ * const fheInstance = await createFHEInstance()
  *
- * await sdk.init()
- * await sdk.wrap({ amount: 100n, to: userAddress })
+ * // Encrypt an amount
+ * const { handle, proof } = await encryptUint64(
+ *   fheInstance,
+ *   contractAddress,
+ *   userAddress,
+ *   100n
+ * )
  * ```
  *
  * @packageDocumentation
  */
 
-// Export SDKs
-export { ConfidentialTokenSDK } from './sdk'
-export { ConfidentialTokenFactorySDK } from './factory-sdk'
-
 // Export types
 export type {
-  // Configuration
-  SDKConfig,
-  FactorySDKConfig,
-
   // Operation parameters
   WrapParams,
   UnwrapParams,
@@ -47,7 +43,6 @@ export type {
   // Data types
   EncryptedBalance,
   UnwrapRequest,
-  TokenMetadata,
 
   // FHE types
   FhevmInstance,

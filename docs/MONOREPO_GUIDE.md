@@ -9,7 +9,7 @@ z-payment/
 │   └── exmaple/
 │
 ├── packages/
-│   ├── core/                  # @z-payment/core - Core SDK
+│   ├── core/                  # @z-payment/core - FHE utilities and types
 │   ├── react/                 # @z-payment/react - React Hooks
 │   └── contracts/             # @z-payment/contracts - Smart Contracts
 │
@@ -63,22 +63,33 @@ bun run test:contracts
 
 ### @z-payment/core
 
-Framework-agnostic SDK for confidential token operations.
+Framework-agnostic FHE utilities and type definitions for confidential token operations.
 
 **Location**: `packages/core/`
 
+**What's included**:
+- FHE encryption/decryption functions
+- Type definitions for all operations
+- Token amount helpers
+
 **Usage**:
 ```typescript
-import { ConfidentialTokenSDK } from '@z-payment/core'
+import { initializeFHE, createFHEInstance, encryptUint64 } from '@z-payment/core'
 
-const sdk = new ConfidentialTokenSDK({
-  tokenAddress: '0x...',
-  provider: window.ethereum
-})
+// Initialize FHE
+await initializeFHE()
+const fheInstance = await createFHEInstance()
 
-await sdk.init()
-await sdk.wrap({ amount: 100n, to: userAddress })
+// Encrypt an amount
+const { handle, proof } = await encryptUint64(
+  fheInstance,
+  contractAddress,
+  userAddress,
+  100n
+)
 ```
+
+**Note**: For React applications, use `@z-payment/react` hooks instead.
 
 [📖 Full Documentation](../packages/core/README.md)
 
@@ -156,9 +167,10 @@ rm -rf node_modules apps/*/node_modules packages/*/node_modules
 
 ### Adding a New Feature
 
-1. **Core SDK**: Add logic to `packages/core/src/`
+1. **Core Utilities**: Add FHE utilities or types to `packages/core/src/`
 2. **React Hooks**: Create hook in `packages/react/src/hooks/`
-3. **Demo**: Use new hook in `apps/demo/`
+3. **Example App**: Demonstrate usage in `apps/example/`
+4. **Web App**: Integrate into `apps/web/`
 
 ### Publishing Packages
 
