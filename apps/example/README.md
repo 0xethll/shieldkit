@@ -161,10 +161,8 @@ VITE_ENVIO_GRAPHQL_URL=https://indexer.example.com/v1/graphql
 **Network**: Sepolia Testnet
 **Chain ID**: 11155111
 
-**Contract Addresses** (from `@z-payment/contracts`):
+**Contract Addresses** (from `/contracts`):
 - Factory: `0x08B2616Eb8F33700014fd53f143aFcaD1d6e512c`
-- cUSD (ERC7984): `0xdCE9Fa07b2ad32D2E6C8051A895262C9914E9445`
-- USD (ERC20): `0xA9062b4629bc8fB79cB4eE904C5c9E179e9F492a`
 
 Get testnet ETH from:
 - [Sepolia Faucet](https://sepoliafaucet.com/)

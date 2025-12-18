@@ -14,11 +14,8 @@ React hooks and providers for Z-Payment - Easy integration of confidential token
 ## Installation
 
 ```bash
-npm install @z-payment/react @z-payment/core @z-payment/contracts wagmi viem ethers
 # or
-yarn add @z-payment/react @z-payment/core @z-payment/contracts wagmi viem ethers
-# or
-bun add @z-payment/react @z-payment/core @z-payment/contracts wagmi viem ethers
+bun add @z-payment/react @z-payment/core wagmi viem ethers
 ```
 
 ## Quick Start
@@ -499,7 +496,7 @@ function TokenOperations({ tokenAddress }) {
 
 ## Re-exported Types
 
-All types from `@z-payment/core` and `@z-payment/contracts` are re-exported for convenience:
+All types from `@z-payment/core` are re-exported for convenience:
 
 ```tsx
 import type {

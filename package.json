@@ -5,8 +5,7 @@
   "description": "Universal Private Payment Protocol - Transform any ERC20 token into confidential assets using Zama's FHE",
   "workspaces": [
     "apps/*",
-    "packages/*",
-    "contracts"
+    "packages/*"
   ],
   "scripts": {
     "dev": "bun run --filter='web' dev",
@@ -14,7 +13,6 @@
     "build:packages": "bun run --filter='./packages/*' build",
     "build:apps": "bun run --filter='./apps/*' build",
     "test": "bun run --filter='./packages/*' test",
-    "test:contracts": "bun run --filter='contracts' test",
     "typecheck": "bun run --filter='*' typecheck",
     "lint": "bun run --filter='*' lint",
     "clean": "bun run --filter='*' clean && rm -rf node_modules",

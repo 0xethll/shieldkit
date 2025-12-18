@@ -11,7 +11,8 @@ z-payment/
 ├── packages/
 │   ├── core/                  # @z-payment/core - FHE utilities and types
 │   ├── react/                 # @z-payment/react - React Hooks
-│   └── contracts/             # @z-payment/contracts - Smart Contracts
+│
+│── contracts/                 # Smart Contracts
 │
 ├── docs/                      # Documentation
 ├── package.json               # Root workspace config
@@ -110,18 +111,11 @@ import { ConfidentialTokenProvider, useWrap } from '@z-payment/react'
 
 [📖 Full Documentation](../packages/react/README.md)
 
-### @z-payment/contracts
+### contracts
 
 Smart contracts, ABIs, and deployment addresses.
 
-**Location**: `packages/contracts/`
-
-**Usage**:
-```typescript
-import { CONTRACTS, CONTRACT_ADDRESSES } from '@z-payment/contracts'
-
-const factoryABI = CONTRACTS.ConfidentialTokenFactory.abi
-```
+**Location**: `contracts/`
 
 [📖 Full Documentation](../packages/contracts/README.md)
 
