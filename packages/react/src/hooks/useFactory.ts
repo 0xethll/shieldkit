@@ -12,7 +12,8 @@ import {
   useReadContract,
 } from 'wagmi'
 import { type Address, type Hash } from 'viem'
-import { CONTRACTS, CONTRACT_ADDRESSES, CHAIN_IDS } from '@z-payment/contracts'
+import { ConfidentialTokenFactoryABI } from '../abis'
+import { CONTRACT_ADDRESSES, CHAIN_IDS } from '../config/contracts'
 
 /**
  * Factory create wrapper parameters
@@ -65,7 +66,7 @@ export function useWrappedTokenAddress(
     isLoading,
   } = useReadContract({
     address: factoryAddress,
-    abi: CONTRACTS.ConfidentialTokenFactory.abi,
+    abi: ConfidentialTokenFactoryABI,
     functionName: 'getConfidentialToken',
     args: erc20Address ? [erc20Address] : undefined,
     query: {
@@ -173,7 +174,7 @@ export function useFactory(params: UseFactoryParams = {}): UseFactoryReturn {
       try {
         writeContract({
           address: factoryAddress,
-          abi: CONTRACTS.ConfidentialTokenFactory.abi,
+          abi: ConfidentialTokenFactoryABI,
           functionName: 'createConfidentialToken',
           args: [erc20Address],
         })

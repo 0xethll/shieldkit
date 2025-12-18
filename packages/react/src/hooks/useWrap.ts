@@ -11,7 +11,7 @@ import {
   useWaitForTransactionReceipt,
 } from 'wagmi'
 import { parseUnits, type Address, type Hash } from 'viem'
-import { CONTRACTS } from '@z-payment/contracts'
+import { ConfidentialERC20WrapperABI } from '../abis'
 
 /**
  * Wrap operation parameters
@@ -117,7 +117,7 @@ export function useWrap(params: UseWrapParams = {}): UseWrapReturn {
         // Call wrap function on the confidential token contract
         writeContract({
           address: tokenAddress,
-          abi: CONTRACTS.cUSD_ERC7984.abi,
+          abi: ConfidentialERC20WrapperABI,
           functionName: 'wrap',
           args: [userAddress, amountWei],
         })

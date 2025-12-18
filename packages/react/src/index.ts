@@ -72,9 +72,25 @@ export type {
   FhevmInstance,
 } from '@z-payment/core'
 
-// Re-export contracts for convenience
-export { CONTRACTS, CONTRACT_ADDRESSES, CHAIN_IDS } from '@z-payment/contracts'
-export type { ChainId, ContractAddresses } from '@z-payment/contracts'
+// Export ABIs
+export {
+  ConfidentialTokenFactoryABI,
+  ConfidentialERC20WrapperABI,
+  ERC20ABI,
+} from './abis'
+export type {
+  ConfidentialTokenFactoryABIType,
+  ConfidentialERC20WrapperABIType,
+  ERC20ABIType,
+} from './abis'
+
+// Export contract configuration
+export {
+  CHAIN_IDS,
+  CONTRACT_ADDRESSES,
+  getFactoryAddress,
+} from './config/contracts'
+export type { ChainId, ContractAddresses } from './config/contracts'
 
 // Export utilities
 export { getEthersSigner, clientToSigner } from './utils/client-to-signer'

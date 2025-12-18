@@ -21,10 +21,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [
-    { "path": "../../packages/core" },
-    { "path": "../../packages/contracts" },
-    { "path": "../../packages/react" }
-  ]
+  "include": ["src"]
 }

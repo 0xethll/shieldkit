@@ -1,15 +1,8 @@
 {
-  "name": "@z-payment/contracts",
+  "name": "contracts",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.ts"
-    }
-  },
   "scripts": {
     "build": "hardhat compile",
     "test": "hardhat test test/USDERC20.test.ts test/ConfidentialTokenFactory.test.ts",

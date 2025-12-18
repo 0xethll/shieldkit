@@ -11,7 +11,7 @@ import {
   useWaitForTransactionReceipt,
 } from 'wagmi'
 import { isAddress, type Address, type Hash } from 'viem'
-import { CONTRACTS } from '@z-payment/contracts'
+import { ConfidentialERC20WrapperABI } from '../abis'
 import { useFHEContext } from '../context/FHEContext'
 
 /**
@@ -181,7 +181,7 @@ export function useTransfer(params: UseTransferParams = {}): UseTransferReturn {
         // Call the confidentialTransfer function
         writeContract({
           address: tokenAddress,
-          abi: CONTRACTS.cUSD_ERC7984.abi,
+          abi: ConfidentialERC20WrapperABI,
           functionName: 'confidentialTransfer',
           args: [recipient, encryptedAmount, inputProof],
         })

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { FHEProvider, useFHEContext } from '@z-payment/react'
-import { CONTRACT_ADDRESSES, CHAIN_IDS } from '@z-payment/contracts'
+import { SEPOLIA_TEST_TOKENS } from './config'
 import WrapExample from './examples/WrapExample'
 import UnwrapExample from './examples/UnwrapExample'
 import TransferExample from './examples/TransferExample'
@@ -17,8 +17,8 @@ function AppContent() {
 
   const [activeTab, setActiveTab] = useState<'wrap' | 'unwrap' | 'transfer' | 'queue' | 'factory'>('wrap')
 
-  // Use Sepolia testnet addresses
-  const tokenAddress = CONTRACT_ADDRESSES[CHAIN_IDS.SEPOLIA].cUSD_ERC7984
+  // Use Sepolia testnet addresses for wrapper token
+  const tokenAddress = SEPOLIA_TEST_TOKENS.wrapper
 
   return (
     <div className="app">

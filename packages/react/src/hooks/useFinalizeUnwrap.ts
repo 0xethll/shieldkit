@@ -10,7 +10,7 @@ import {
   useWaitForTransactionReceipt,
 } from 'wagmi'
 import { type Address, type Hash } from 'viem'
-import { CONTRACTS } from '@z-payment/contracts'
+import { ConfidentialERC20WrapperABI } from '../abis'
 import { useFHEContext } from '../context/FHEContext'
 
 /**
@@ -189,7 +189,7 @@ export function useFinalizeUnwrap(
         // Call finalizeUnwrap on the contract
         writeContract({
           address: tokenAddress,
-          abi: CONTRACTS.cUSD_ERC7984.abi,
+          abi: ConfidentialERC20WrapperABI,
           functionName: 'finalizeUnwrap',
           args: [burntAmount, cleartextAmount, proof],
         })

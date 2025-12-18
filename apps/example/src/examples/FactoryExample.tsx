@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useFactory, useWrappedTokenAddress } from '@z-payment/react'
-import { CHAIN_IDS } from '@z-payment/contracts'
+import { useFactory, useWrappedTokenAddress, CHAIN_IDS } from '@z-payment/react'
 import type { Address } from 'viem'
 
 export default function FactoryExample() {
