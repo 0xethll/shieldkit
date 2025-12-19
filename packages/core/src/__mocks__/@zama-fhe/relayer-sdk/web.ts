@@ -7,12 +7,43 @@ import type { FhevmInstance } from '@zama-fhe/relayer-sdk/bundle'
 // Mock FHE instance
 class MockFhevmInstance implements Partial<FhevmInstance> {
   createEncryptedInput(contractAddress: string, userAddress: string) {
-    const values: bigint[] = []
+    const values: Array<boolean | number | bigint | string> = []
 
-    return {
-      add64(value: bigint) {
+    const input = {
+      addBool(value: boolean | number | bigint) {
         values.push(value)
-        return this
+        return input
+      },
+      add8(value: number | bigint) {
+        values.push(value)
+        return input
+      },
+      add16(value: number | bigint) {
+        values.push(value)
+        return input
+      },
+      add32(value: number | bigint) {
+        values.push(value)
+        return input
+      },
+      add64(value: number | bigint) {
+        values.push(value)
+        return input
+      },
+      add128(value: number | bigint) {
+        values.push(value)
+        return input
+      },
+      add256(value: number | bigint) {
+        values.push(value)
+        return input
+      },
+      addAddress(value: string) {
+        values.push(value)
+        return input
+      },
+      getBits() {
+        return values.map(() => 64 as any)
       },
       async encrypt() {
         return {
@@ -21,20 +52,25 @@ class MockFhevmInstance implements Partial<FhevmInstance> {
         }
       },
     }
+
+    return input
   }
 
-  async publicDecrypt(ciphertexts: string[]): Promise<{
+  async publicDecrypt(handles: (string | Uint8Array)[]): Promise<{
     clearValues: Record<`0x${string}`, bigint>
+    abiEncodedClearValues: `0x${string}`
     decryptionProof: `0x${string}`
   }> {
     const clearValues: Record<`0x${string}`, bigint> = {}
 
-    for (const ct of ciphertexts) {
-      clearValues[ct as `0x${string}`] = 100n // Mock decrypted value
+    for (const handle of handles) {
+      const key = typeof handle === 'string' ? handle : '0xhandle'
+      clearValues[key as `0x${string}`] = 100n // Mock decrypted value
     }
 
     return {
       clearValues,
+      abiEncodedClearValues: '0xencoded123',
       decryptionProof: '0xproof123',
     }
   }
@@ -49,15 +85,17 @@ class MockFhevmInstance implements Partial<FhevmInstance> {
   createEIP712(
     publicKey: string,
     contractAddresses: string[],
-    startTimeStamp: string,
-    durationDays: string
+    startTimestamp: string | number,
+    durationDays: string | number
   ) {
     return {
       domain: {
         name: 'MockDomain',
         version: '1',
         chainId: 1,
+        verifyingContract: '0x0000000000000000000000000000000000000000',
       },
+      primaryType: 'UserDecryptRequestVerification',
       types: {
         UserDecryptRequestVerification: [
           { name: 'publicKey', type: 'string' },
@@ -67,26 +105,27 @@ class MockFhevmInstance implements Partial<FhevmInstance> {
       message: {
         publicKey,
         contractAddresses,
-        startTimeStamp,
-        durationDays,
+        startTimestamp: String(startTimestamp),
+        durationDays: String(durationDays),
       },
     }
   }
 
   async userDecrypt(
-    handleContractPairs: Array<{ handle: string; contractAddress: string }>,
+    handles: Array<{ handle: string | Uint8Array; contractAddress: string }>,
     privateKey: string,
     publicKey: string,
     signature: string,
     contractAddresses: string[],
     userAddress: string,
-    startTimeStamp: string,
-    durationDays: string
+    startTimestamp: string | number,
+    durationDays: string | number
   ): Promise<Record<`0x${string}`, bigint>> {
     const result: Record<`0x${string}`, bigint> = {}
 
-    for (const pair of handleContractPairs) {
-      result[pair.handle as `0x${string}`] = 200n // Mock decrypted value
+    for (const pair of handles) {
+      const key = typeof pair.handle === 'string' ? pair.handle : '0xhandle'
+      result[key as `0x${string}`] = 200n // Mock decrypted value
     }
 
     return result
