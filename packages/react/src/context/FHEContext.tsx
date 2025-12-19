@@ -111,7 +111,11 @@ export interface FHEContextType {
   signer: Signer | null
 }
 
-const FHEContext = createContext<FHEContextType | null>(null)
+/**
+ * FHE Context
+ * @internal Exported for testing purposes
+ */
+export const FHEContext = createContext<FHEContextType | null>(null)
 
 /**
  * FHE Provider props
