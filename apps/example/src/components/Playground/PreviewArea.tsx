@@ -8,8 +8,8 @@ export default function PreviewArea() {
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-background via-background to-background/95">
       {/* Preview Frame */}
-      <div className="w-full h-full flex items-center justify-center p-8">
-        <div className="w-full max-w-4xl h-full max-h-[800px] bg-background border border-border rounded-2xl shadow-2xl overflow-hidden">
+      <div className="w-full h-full flex items-center justify-center p-6">
+        <div className="w-full max-w-5xl h-full max-h-[95%] bg-background border border-border rounded-2xl shadow-2xl overflow-hidden">
           <ScenarioApp />
         </div>
       </div>

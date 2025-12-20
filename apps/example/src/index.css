@@ -1,50 +1,61 @@
 @import "tailwindcss";
 
+@theme {
+  /* Dark theme colors using oklch format */
+  --color-background: oklch(0.18 0.02 265);
+  --color-foreground: oklch(0.89 0.01 265);
+  --color-muted: oklch(0.18 0.02 265);
+  --color-muted-foreground: oklch(0.62 0.01 265);
+  --color-border: oklch(0.27 0.02 265);
+  --color-primary: oklch(0.64 0.18 286);
+  --color-primary-foreground: oklch(0.98 0.01 265);
+  --color-secondary: oklch(0.18 0.02 265);
+  --color-secondary-foreground: oklch(0.98 0.01 265);
+  --color-accent: oklch(0.27 0.02 265);
+  --color-accent-foreground: oklch(0.98 0.01 265);
+
+  /* Border radius */
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  /* Dark theme variables */
-  --background: 222 47% 11%;
-  --foreground: 213 31% 91%;
-  --muted: 223 47% 11%;
-  --muted-foreground: 215.4 16.3% 56.9%;
-  --border: 216 34% 17%;
-  --primary: 262 83% 58%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 222 47% 11%;
-  --secondary-foreground: 210 40% 98%;
-  --accent: 216 34% 17%;
-  --accent-foreground: 210 40% 98%;
-  --radius: 0.5rem;
-
-  color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: hsl(var(--background));
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
 #root {
   width: 100%;
   height: 100vh;
   overflow: hidden;
+}
+
+/* Custom scrollbar styles */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: oklch(0.27 0.02 265);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.64 0.18 286);
 }

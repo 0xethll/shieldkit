@@ -19,27 +19,25 @@ export default function PlaygroundLayout() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        <Group orientation="horizontal" className="h-full">
+        <Group id="playground-panels" orientation="horizontal" style={{ display: 'flex', height: '100%' }}>
           {/* Left Panel - Configuration */}
-          <Panel defaultSize={30} minSize={25} maxSize={40} className="relative">
-            <div className="h-full overflow-y-auto p-6">
+          <Panel id="config-panel" defaultSize={35} minSize={30} maxSize={45}>
+            <div className="h-full overflow-y-auto overflow-x-hidden scrollbar-thin p-6">
               <ConfigurationPanel />
             </div>
           </Panel>
 
           {/* Resize Handle */}
-          <Separator className="w-px bg-border hover:bg-primary/50 transition-colors relative group">
+          <Separator style={{ width: '1px' }} className="bg-border hover:bg-primary/50 transition-colors relative group">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-12 rounded bg-background border border-border opacity-0 group-hover:opacity-100 transition-opacity">
               <GripVertical className="w-4 h-4 text-muted-foreground" />
             </div>
           </Separator>
 
           {/* Right Panel - Preview */}
-          <Panel defaultSize={70} minSize={60}>
-            <div className="h-full flex flex-col">
-              <div className="flex-1 overflow-hidden">
-                <PreviewArea />
-              </div>
+          <Panel id="preview-panel" defaultSize={65} minSize={55}>
+            <div className="h-full overflow-hidden">
+              <PreviewArea />
             </div>
           </Panel>
         </Group>
