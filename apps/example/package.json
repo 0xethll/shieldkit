@@ -11,14 +11,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@z-payment/react": "workspace:*",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-query": "^5.62.7",
     "@z-payment/core": "workspace:*",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "wagmi": "^2.12.29",
-    "viem": "catalog:",
+    "@z-payment/react": "workspace:*",
     "ethers": "catalog:",
-    "@tanstack/react-query": "^5.62.7"
+    "framer-motion": "^12.23.26",
+    "lucide-react": "^0.562.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-resizable-panels": "^4.0.9",
+    "tailwindcss": "^4.1.18",
+    "viem": "catalog:",
+    "wagmi": "^2.12.29",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/react": "catalog:",
