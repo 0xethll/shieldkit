@@ -21,7 +21,7 @@ export default function PlaygroundLayout() {
       <div className="flex-1 overflow-hidden">
         <Group id="playground-panels" orientation="horizontal" style={{ display: 'flex', height: '100%' }}>
           {/* Left Panel - Configuration */}
-          <Panel id="config-panel" defaultSize={35} minSize={30} maxSize={45}>
+          <Panel id="config-panel" defaultSize={35} minSize={30} maxSize={260}>
             <div className="h-full overflow-y-auto overflow-x-hidden scrollbar-thin p-6">
               <ConfigurationPanel />
             </div>
