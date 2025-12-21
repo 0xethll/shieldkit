@@ -1,6 +1,6 @@
-# @z-payment/react
+# @shieldkit/react
 
-React hooks and providers for Z-Payment - Easy integration of confidential token operations in React applications.
+React hooks and providers for ShieldKit - Easy integration of confidential token operations in React applications.
 
 ## Features
 
@@ -15,7 +15,7 @@ React hooks and providers for Z-Payment - Easy integration of confidential token
 
 ```bash
 # or
-bun add @z-payment/react @z-payment/core wagmi viem ethers
+bun add @shieldkit/react @shieldkit/core wagmi viem ethers
 ```
 
 ## Quick Start
@@ -25,7 +25,7 @@ bun add @z-payment/react @z-payment/core wagmi viem ethers
 Wrap your app with `FHEProvider` to manage FHE initialization:
 
 ```tsx
-import { FHEProvider } from '@z-payment/react'
+import { FHEProvider } from '@shieldkit/react'
 import { WagmiProvider } from 'wagmi'
 import { config } from './wagmi-config'
 
@@ -43,7 +43,7 @@ function App() {
 ### 2. Use Hooks
 
 ```tsx
-import { useWrap, useFHEContext } from '@z-payment/react'
+import { useWrap, useFHEContext } from '@shieldkit/react'
 
 function WrapComponent() {
   const { isFHEReady } = useFHEContext()
@@ -74,7 +74,7 @@ function WrapComponent() {
 Global provider that manages FHE instance and ethers.js signer.
 
 ```tsx
-import { FHEProvider } from '@z-payment/react'
+import { FHEProvider } from '@shieldkit/react'
 
 <FHEProvider>
   {children}
@@ -94,7 +94,7 @@ import { FHEProvider } from '@z-payment/react'
 Access FHE instance and signer.
 
 ```tsx
-import { useFHEContext } from '@z-payment/react'
+import { useFHEContext } from '@shieldkit/react'
 
 function MyComponent() {
   const { isFHEReady, fheInstance, signer, fheError, retryFHE } = useFHEContext()
@@ -121,7 +121,7 @@ function MyComponent() {
 Wrap ERC20 tokens into confidential tokens.
 
 ```tsx
-import { useWrap } from '@z-payment/react'
+import { useWrap } from '@shieldkit/react'
 
 const { wrap, isLoading, isSuccess, error, txHash, reset } = useWrap({
   tokenAddress: '0x...',
@@ -151,7 +151,7 @@ await wrap('100.5')
 Unwrap confidential tokens back to ERC20 (creates unwrap request).
 
 ```tsx
-import { useUnwrap } from '@z-payment/react'
+import { useUnwrap } from '@shieldkit/react'
 
 const { unwrap, isLoading, isFHEReady } = useUnwrap({
   tokenAddress: '0x...',
@@ -184,7 +184,7 @@ if (isFHEReady) {
 Transfer confidential tokens to another address.
 
 ```tsx
-import { useTransfer } from '@z-payment/react'
+import { useTransfer } from '@shieldkit/react'
 
 const { transfer, isLoading, canTransfer } = useTransfer({
   tokenAddress: '0x...',
@@ -224,7 +224,7 @@ if (canTransfer) {
 Fetch pending unwrap requests from the indexer.
 
 ```tsx
-import { useUnwrapQueue } from '@z-payment/react'
+import { useUnwrapQueue } from '@shieldkit/react'
 
 const { unwrapRequests, isLoading, error, refetch } = useUnwrapQueue({
   tokenAddress: '0x...',
@@ -280,7 +280,7 @@ interface UnwrapRequest {
 Finalize unwrap requests (decrypt and complete unwrap).
 
 ```tsx
-import { useFinalizeUnwrap } from '@z-payment/react'
+import { useFinalizeUnwrap } from '@shieldkit/react'
 
 const { finalizeUnwrap, isFinalizing, isFHEReady } = useFinalizeUnwrap({
   tokenAddress: '0x...',
@@ -298,7 +298,7 @@ if (isFHEReady) {
 
 **With Pre-decryption Cache (Optimized):**
 ```tsx
-import { useFinalizeUnwrap, useDecryptedAmounts } from '@z-payment/react'
+import { useFinalizeUnwrap, useDecryptedAmounts } from '@shieldkit/react'
 
 // Pre-decrypt amounts in background
 const decryptedCache = useDecryptedAmounts(unwrapRequests, fheInstance)
@@ -331,7 +331,7 @@ const { finalizeUnwrap } = useFinalizeUnwrap({
 Create new confidential token wrappers.
 
 ```tsx
-import { useFactory } from '@z-payment/react'
+import { useFactory } from '@shieldkit/react'
 
 const { createWrapper, isLoading, isSuccess, factoryAddress } = useFactory({
   onSuccess: (wrapperAddress) => {
@@ -361,7 +361,7 @@ await createWrapper('0xERC20Address...')
 Check if a wrapper exists for an ERC20 token.
 
 ```tsx
-import { useWrappedTokenAddress } from '@z-payment/react'
+import { useWrappedTokenAddress } from '@shieldkit/react'
 
 const { wrappedAddress, isLoading, refetch } = useWrappedTokenAddress(
   '0xERC20Address...',
@@ -391,7 +391,7 @@ if (wrappedAddress) {
 Convert wagmi config to ethers.js signer.
 
 ```tsx
-import { getEthersSigner } from '@z-payment/react'
+import { getEthersSigner } from '@shieldkit/react'
 import { useConfig } from 'wagmi'
 
 const config = useConfig()
@@ -403,7 +403,7 @@ const signer = await getEthersSigner(config, { chainId: 11155111 })
 Convert viem client to ethers.js signer.
 
 ```tsx
-import { clientToSigner } from '@z-payment/react'
+import { clientToSigner } from '@shieldkit/react'
 
 const signer = clientToSigner(viemClient)
 ```
@@ -419,7 +419,7 @@ import {
   useTransfer,
   useUnwrapQueue,
   useFinalizeUnwrap
-} from '@z-payment/react'
+} from '@shieldkit/react'
 
 function ConfidentialTokenApp() {
   const tokenAddress = '0xYourTokenAddress'
@@ -496,7 +496,7 @@ function TokenOperations({ tokenAddress }) {
 
 ## Re-exported Types
 
-All types from `@z-payment/core` are re-exported for convenience:
+All types from `@shieldkit/core` are re-exported for convenience:
 
 ```tsx
 import type {
@@ -511,10 +511,10 @@ import type {
   // Contract types
   ChainId,
   ContractAddresses
-} from '@z-payment/react'
+} from '@shieldkit/react'
 
 // Also available: CONTRACTS, CONTRACT_ADDRESSES, CHAIN_IDS
-import { CONTRACTS, CONTRACT_ADDRESSES, CHAIN_IDS } from '@z-payment/react'
+import { CONTRACTS, CONTRACT_ADDRESSES, CHAIN_IDS } from '@shieldkit/react'
 ```
 
 ## Performance Tips

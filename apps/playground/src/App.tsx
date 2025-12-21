@@ -1,4 +1,4 @@
-import { FHEProvider } from '@z-payment/react'
+import { FHEProvider } from '@shieldkit/react'
 import PlaygroundLayout from './components/Playground/PlaygroundLayout'
 
 function App() {

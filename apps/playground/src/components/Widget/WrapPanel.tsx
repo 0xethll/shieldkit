@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useWrap } from '@z-payment/react'
+import { useWrap } from '@shieldkit/react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
 import { ChevronDown, Lock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'

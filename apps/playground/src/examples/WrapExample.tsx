@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useWrap } from '@z-payment/react'
+import { useWrap } from '@shieldkit/react'
 import type { Address } from 'viem'
 
 interface WrapExampleProps {
@@ -86,7 +86,7 @@ export default function WrapExample({ tokenAddress }: WrapExampleProps) {
 
       <div className="code-example">
         <h4>Code Example:</h4>
-        <pre>{`import { useWrap } from '@z-payment/react'
+        <pre>{`import { useWrap } from '@shieldkit/react'
 
 const { wrap, isLoading, isSuccess } = useWrap({
   tokenAddress: '0x...',

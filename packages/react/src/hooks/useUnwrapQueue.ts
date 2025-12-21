@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAccount } from 'wagmi'
 import { type Address } from 'viem'
 import { GraphQLClient } from 'graphql-request'
-import type { UnwrapRequest } from '@z-payment/core'
+import type { UnwrapRequest } from '@shieldkit/core'
 
 /**
  * GraphQL query to fetch unwrap requests for a specific recipient

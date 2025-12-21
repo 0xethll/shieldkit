@@ -1,6 +1,6 @@
 /**
- * Manual mock for @z-payment/core
- * Automatically used by Vitest when vi.mock('@z-payment/core') is called
+ * Manual mock for @shieldkit/core
+ * Automatically used by Vitest when vi.mock('@shieldkit/core') is called
  */
 
 import { vi } from 'vitest'

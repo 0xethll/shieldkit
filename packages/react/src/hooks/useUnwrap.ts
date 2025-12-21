@@ -122,7 +122,7 @@ export function useUnwrap(params: UseUnwrapParams = {}): UseUnwrapReturn {
       try {
         // Import encryption function from core
         const { encryptUint64, parseTokenAmount } = await import(
-          '@z-payment/core'
+          '@shieldkit/core'
         )
 
         // Convert to smallest unit (default 6 decimals for USD tokens)

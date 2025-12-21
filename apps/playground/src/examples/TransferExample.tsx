@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTransfer } from '@z-payment/react'
+import { useTransfer } from '@shieldkit/react'
 import type { Address } from 'viem'
 
 interface TransferExampleProps {
@@ -110,7 +110,7 @@ export default function TransferExample({ tokenAddress }: TransferExampleProps) 
 
       <div className="code-example">
         <h4>Code Example:</h4>
-        <pre>{`import { useTransfer } from '@z-payment/react'
+        <pre>{`import { useTransfer } from '@shieldkit/react'
 
 const { transfer, isLoading, canTransfer } = useTransfer({
   tokenAddress: '0x...',

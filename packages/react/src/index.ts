@@ -1,12 +1,12 @@
 /**
- * @z-payment/react
+ * @shieldkit/react
  *
  * React hooks and providers for Z-Payment
- * Built on @z-payment/core and wagmi
+ * Built on @shieldkit/core and wagmi
  *
  * @example
  * ```tsx
- * import { FHEProvider, useWrap } from '@z-payment/react'
+ * import { FHEProvider, useWrap } from '@shieldkit/react'
  *
  * function App() {
  *   return (
@@ -70,7 +70,7 @@ export type {
   EncryptedBalance,
   UnwrapRequest,
   FhevmInstance,
-} from '@z-payment/core'
+} from '@shieldkit/core'
 
 // Export ABIs
 export {

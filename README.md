@@ -1,10 +1,10 @@
-# Z-Payment - Universal Private Payment Protocol
+# ShieldKit - React Toolkit for Confidential Web3 Applications
 
-Transform any ERC20 token into confidential assets using Zama's Fully Homomorphic Encryption (FHE). Built on OpenZeppelin ERC7984, Z-Payment enables private transfers with encrypted balances for any standard token.
+A comprehensive React toolkit for building confidential Web3 applications using Zama's Fully Homomorphic Encryption (FHE). Built on OpenZeppelin ERC7984, ShieldKit provides hooks, components, and utilities for private token operations with encrypted balances.
 
 ## Live Demo
 
-🚀 **Try it now:** [https://z-payment.vercel.app/](https://z-payment.vercel.app/)
+🚀 **Try it now:** [https://shieldkit.vercel.app/](https://shieldkit.vercel.app/)
 
 ## Key Features
 

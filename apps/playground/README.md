@@ -1,6 +1,6 @@
-# Z-Payment React Hooks Examples
+# ShieldKit React Hooks Examples
 
-Simple Vite + React example demonstrating how to use `@z-payment/react` hooks.
+Simple Vite + React example demonstrating how to use `@shieldkit/react` hooks.
 
 ## Features
 
@@ -92,7 +92,7 @@ All examples are wrapped in `FHEProvider` which manages:
 - Global state for FHE readiness
 
 ```tsx
-import { FHEProvider } from '@z-payment/react'
+import { FHEProvider } from '@shieldkit/react'
 
 <FHEProvider>
   <App />
@@ -104,7 +104,7 @@ import { FHEProvider } from '@z-payment/react'
 Each hook follows a similar pattern:
 
 ```tsx
-import { useWrap } from '@z-payment/react'
+import { useWrap } from '@shieldkit/react'
 
 const {
   wrap,           // Function to call
@@ -206,7 +206,7 @@ If you don't see unwrap requests:
 - **wagmi** - React hooks for Ethereum
 - **viem** - TypeScript Ethereum library
 - **ethers.js** - Required for FHE operations
-- **@z-payment/react** - Confidential token hooks
+- **@shieldkit/react** - Confidential token hooks
 - **@tanstack/react-query** - Async state management
 
 ## License

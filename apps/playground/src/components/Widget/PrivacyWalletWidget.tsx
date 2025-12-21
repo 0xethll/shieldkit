@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import { useFHEContext } from '@z-payment/react'
+import { useFHEContext } from '@shieldkit/react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import WrapPanel from './WrapPanel'
 import TransferPanel from './TransferPanel'

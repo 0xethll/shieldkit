@@ -1,16 +1,16 @@
-# Z-Payment Monorepo Guide
+# ShieldKit Monorepo Guide
 
 ## 📦 Project Structure
 
 ```
-z-payment/
+shieldkit/
 ├── apps/
 │   └── web/                   # Application (Next.js)
 │   └── exmaple/
 │
 ├── packages/
-│   ├── core/                  # @z-payment/core - FHE utilities and types
-│   ├── react/                 # @z-payment/react - React Hooks
+│   ├── core/                  # @shieldkit/core - FHE utilities and types
+│   ├── react/                 # @shieldkit/react - React Hooks
 │
 │── contracts/                 # Smart Contracts
 │
@@ -62,7 +62,7 @@ bun run test:contracts
 
 ## 📚 Packages
 
-### @z-payment/core
+### @shieldkit/core
 
 Framework-agnostic FHE utilities and type definitions for confidential token operations.
 
@@ -75,7 +75,7 @@ Framework-agnostic FHE utilities and type definitions for confidential token ope
 
 **Usage**:
 ```typescript
-import { initializeFHE, createFHEInstance, encryptUint64 } from '@z-payment/core'
+import { initializeFHE, createFHEInstance, encryptUint64 } from '@shieldkit/core'
 
 // Initialize FHE
 await initializeFHE()
@@ -90,11 +90,11 @@ const { handle, proof } = await encryptUint64(
 )
 ```
 
-**Note**: For React applications, use `@z-payment/react` hooks instead.
+**Note**: For React applications, use `@shieldkit/react` hooks instead.
 
 [📖 Full Documentation](../packages/core/README.md)
 
-### @z-payment/react
+### @shieldkit/react
 
 React hooks and providers for easy integration.
 
@@ -102,7 +102,7 @@ React hooks and providers for easy integration.
 
 **Usage**:
 ```tsx
-import { ConfidentialTokenProvider, useWrap } from '@z-payment/react'
+import { ConfidentialTokenProvider, useWrap } from '@shieldkit/react'
 
 <ConfidentialTokenProvider tokenAddress="0x...">
   <App />
@@ -141,7 +141,7 @@ bun update
 bun run --filter='*' <script>
 
 # Run in specific package
-bun run --filter='@z-payment/core' <script>
+bun run --filter='@shieldkit/core' <script>
 
 # Run in all packages
 bun run --filter='./packages/*' build
@@ -182,9 +182,9 @@ cd packages/contracts && npm publish
 
 ### Future Enhancements
 
-- [ ] Add `@z-payment/ui` - Pre-built React components
-- [ ] Add `@z-payment/widget` - Embeddable widget
-- [ ] Add `@z-payment/cli` - Command-line tools
+- [ ] Add `@shieldkit/ui` - Pre-built React components
+- [ ] Add `@shieldkit/widget` - Embeddable widget
+- [ ] Add `@shieldkit/cli` - Command-line tools
 - [ ] Documentation website
 - [ ] Example projects
 
@@ -212,7 +212,7 @@ Ensure workspace dependencies use `workspace:*` in package.json:
 ```json
 {
   "dependencies": {
-    "@z-payment/core": "workspace:*"
+    "@shieldkit/core": "workspace:*"
   }
 }
 ```

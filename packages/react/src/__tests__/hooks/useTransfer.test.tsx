@@ -7,7 +7,7 @@ import * as wagmi from 'wagmi'
 
 // Use manual mocks
 vi.mock('wagmi')
-vi.mock('@z-payment/core')
+vi.mock('@shieldkit/core')
 
 beforeEach(() => {
   // Reset all mocks before each test

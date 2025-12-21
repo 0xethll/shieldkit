@@ -1,12 +1,12 @@
 /**
- * @z-payment/core
+ * @shieldkit/core
  *
  * Core utilities and types for Z-Payment - Framework-agnostic FHE operations
  * Built on Zama's Fully Homomorphic Encryption (FHE) technology
  *
  * @example
  * ```typescript
- * import { initializeFHE, createFHEInstance, encryptUint64 } from '@z-payment/core'
+ * import { initializeFHE, createFHEInstance, encryptUint64 } from '@shieldkit/core'
  *
  * // Initialize FHE
  * await initializeFHE()

@@ -1,6 +1,6 @@
 # contracts
 
-Smart contracts, ABIs, and deployment addresses for Z-Payment.
+Smart contracts, ABIs, and deployment addresses for ShieldKit.
 
 ## Contents
 

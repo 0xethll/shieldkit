@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTransfer } from '@z-payment/react'
+import { useTransfer } from '@shieldkit/react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
 import { Send, Loader2, CheckCircle2, AlertCircle, Lock } from 'lucide-react'

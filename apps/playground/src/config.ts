@@ -3,7 +3,7 @@
  *
  * This file contains application-specific token addresses and configurations.
  * These are separate from the infrastructure contracts (Factory) which live
- * in the @z-payment/react package.
+ * in the @shieldkit/react package.
  */
 
 import type { Address } from 'viem'

@@ -1,8 +1,8 @@
 {
-  "name": "z-payment",
+  "name": "shieldkit",
   "version": "0.1.0",
   "private": true,
-  "description": "Universal Private Payment Protocol - Transform any ERC20 token into confidential assets using Zama's FHE",
+  "description": "ShieldKit - React toolkit for building confidential Web3 applications with Zama's FHE technology",
   "workspaces": {
     "packages": [
       "apps/*",
@@ -35,7 +35,7 @@
     "lint": "bun run --filter='*' lint",
     "clean": "bun run --filter='*' clean && rm -rf node_modules",
     "dev:web": "bun run --filter='web' dev",
-    "dev:core": "bun run --filter='@z-payment/core' dev"
+    "dev:core": "bun run --filter='@shieldkit/core' dev"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xethll/Z-Payment"
+    "url": "https://github.com/0xethll/ShieldKit"
   },
   "keywords": [
     "fhe",

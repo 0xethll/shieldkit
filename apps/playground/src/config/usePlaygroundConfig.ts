@@ -94,7 +94,7 @@ export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
     const { customTokens, defaultTab, features, theme } = state
 
     // Generate imports
-    const imports = `import { PrivacyWallet } from '@z-payment/react'\n`
+    const imports = `import { PrivacyWallet } from '@shieldkit/react'\n`
 
     // Generate component code
     const tokensArray = customTokens.length > 0 ? `['${customTokens.join("', '")}']` : '[]'

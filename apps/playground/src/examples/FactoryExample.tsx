@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useFactory, useWrappedTokenAddress, CHAIN_IDS } from '@z-payment/react'
+import { useFactory, useWrappedTokenAddress, CHAIN_IDS } from '@shieldkit/react'
 import type { Address } from 'viem'
 
 export default function FactoryExample() {
@@ -142,7 +142,7 @@ export default function FactoryExample() {
 
       <div className="code-example">
         <h4>Code Example:</h4>
-        <pre>{`import { useFactory, useWrappedTokenAddress } from '@z-payment/react'
+        <pre>{`import { useFactory, useWrappedTokenAddress } from '@shieldkit/react'
 
 // Create new wrapper
 const { createWrapper, isLoading } = useFactory({

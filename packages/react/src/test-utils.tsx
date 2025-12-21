@@ -1,5 +1,5 @@
 /**
- * Test utilities for @z-payment/react
+ * Test utilities for @shieldkit/react
  */
 
 import { ReactNode } from 'react'
@@ -8,7 +8,7 @@ import { WagmiProvider, createConfig, http } from 'wagmi'
 import { sepolia } from 'wagmi/chains'
 import { FHEContext } from './context/FHEContext'
 import type { FHEContextType } from './context/FHEContext'
-import type { FhevmInstance } from '@z-payment/core'
+import type { FhevmInstance } from '@shieldkit/core'
 
 /**
  * Create a mock FHE instance for testing

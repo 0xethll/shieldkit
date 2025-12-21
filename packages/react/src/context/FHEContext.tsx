@@ -25,8 +25,8 @@ declare global {
 }
 import { useAccount, useConfig } from 'wagmi'
 import { Signer } from 'ethers'
-import { initializeFHE, createFHEInstance } from '@z-payment/core'
-import type { FhevmInstance } from '@z-payment/core'
+import { initializeFHE, createFHEInstance } from '@shieldkit/core'
+import type { FhevmInstance } from '@shieldkit/core'
 import { getEthersSigner } from '../utils/client-to-signer'
 
 // Global singleton state to prevent multiple FHE initializations

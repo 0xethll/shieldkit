@@ -156,7 +156,7 @@ export function useTransfer(params: UseTransferParams = {}): UseTransferReturn {
 
         // Import functions from core
         const { encryptUint64, parseTokenAmount } = await import(
-          '@z-payment/core'
+          '@shieldkit/core'
         )
 
         // Convert to smallest unit

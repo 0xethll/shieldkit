@@ -1,5 +1,5 @@
 /**
- * Vitest setup file for @z-payment/react
+ * Vitest setup file for @shieldkit/react
  */
 
 import { afterEach } from 'vitest'

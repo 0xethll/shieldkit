@@ -177,7 +177,7 @@ export function useFinalizeUnwrap(
           proof = cached.proof
         } else {
           // Decrypt on-demand if not in cache
-          const { decryptPublicly } = await import('@z-payment/core')
+          const { decryptPublicly } = await import('@shieldkit/core')
           const [amount, decryptionProof] = await decryptPublicly(
             fheInstance,
             burntAmount,

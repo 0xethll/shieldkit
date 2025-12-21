@@ -1,6 +1,6 @@
-# @z-payment/core
+# @shieldkit/core
 
-Core utilities and types for Z-Payment - Framework-agnostic FHE operations built on Zama's Fully Homomorphic Encryption (FHE).
+Core utilities and types for ShieldKit - Framework-agnostic FHE operations built on Zama's Fully Homomorphic Encryption (FHE).
 
 ## Features
 
@@ -13,11 +13,11 @@ Core utilities and types for Z-Payment - Framework-agnostic FHE operations built
 ## Installation
 
 ```bash
-npm install @z-payment/core
+npm install @shieldkit/core
 # or
-yarn add @z-payment/core
+yarn add @shieldkit/core
 # or
-bun add @z-payment/core
+bun add @shieldkit/core
 ```
 
 ## What's Included
@@ -28,14 +28,14 @@ This package provides:
 2. **Type Definitions** - TypeScript types for all operations
 3. **Helper Functions** - Token amount formatting and parsing
 
-**Note**: This is a low-level utility package. For React applications, use `@z-payment/react` which provides ready-to-use hooks.
+**Note**: This is a low-level utility package. For React applications, use `@shieldkit/react` which provides ready-to-use hooks.
 
 ## Quick Start
 
 ### Initialize FHE
 
 ```typescript
-import { initializeFHE, createFHEInstance } from '@z-payment/core'
+import { initializeFHE, createFHEInstance } from '@shieldkit/core'
 
 // Initialize FHE (call once at app startup)
 await initializeFHE()
@@ -47,7 +47,7 @@ const fheInstance = await createFHEInstance()
 ### Encrypt Values
 
 ```typescript
-import { encryptUint64 } from '@z-payment/core'
+import { encryptUint64 } from '@shieldkit/core'
 
 // Encrypt an amount for contract use
 const { handle, proof } = await encryptUint64(
@@ -65,7 +65,7 @@ const inputProof = `0x${Buffer.from(proof).toString('hex')}`
 ### Decrypt Values
 
 ```typescript
-import { decryptPublicly, decryptForUser } from '@z-payment/core'
+import { decryptPublicly, decryptForUser } from '@shieldkit/core'
 
 // Public decryption (anyone can decrypt)
 const [cleartextAmount, proof] = await decryptPublicly(
@@ -160,7 +160,7 @@ const balance = await decryptForUser(
 Format a token amount for display.
 
 ```typescript
-import { formatTokenAmount } from '@z-payment/core'
+import { formatTokenAmount } from '@shieldkit/core'
 
 formatTokenAmount(1000000n, 6)  // "1.0"
 formatTokenAmount(1500000n, 6)  // "1.5"
@@ -171,7 +171,7 @@ formatTokenAmount(1500000n, 6)  // "1.5"
 Parse a user input string to token amount.
 
 ```typescript
-import { parseTokenAmount } from '@z-payment/core'
+import { parseTokenAmount } from '@shieldkit/core'
 
 parseTokenAmount("1.5", 6)  // 1500000n
 parseTokenAmount("100", 6)  // 100000000n
@@ -198,7 +198,7 @@ import type {
   EncryptedBalance,
   UnwrapRequest,
   FhevmInstance
-} from '@z-payment/core'
+} from '@shieldkit/core'
 ```
 
 ### Example: WrapParams
@@ -228,13 +228,13 @@ interface UnwrapRequest {
 
 ## Usage with React
 
-For React applications, use `@z-payment/react` which provides:
+For React applications, use `@shieldkit/react` which provides:
 - `FHEProvider` - Context provider for FHE instance
 - `useWrap`, `useUnwrap`, `useTransfer` - Operation hooks
 - `useUnwrapQueue`, `useFinalizeUnwrap` - Queue management hooks
 - `useFactory` - Factory operations
 
-See `@z-payment/react` documentation for details.
+See `@shieldkit/react` documentation for details.
 
 ## Usage with Other Frameworks
 
@@ -260,7 +260,7 @@ import {
   createFHEInstance,
   encryptUint64,
   parseTokenAmount
-} from '@z-payment/core'
+} from '@shieldkit/core'
 
 // 1. Initialize (once at startup)
 await initializeFHE()
@@ -308,7 +308,7 @@ FHE operations require:
 
 - This package provides low-level utilities only
 - Wallet integration must be handled by your application
-- For complete React integration, use `@z-payment/react`
+- For complete React integration, use `@shieldkit/react`
 - FHE operations require browser environment (not Node.js)
 
 ## License

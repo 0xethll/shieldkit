@@ -44,7 +44,7 @@ export default function CodeDisplay() {
             </h4>
             <div className="relative">
               <pre className="bg-background border border-border rounded-lg p-4 text-sm font-mono overflow-x-auto">
-                npm install @z-payment/react
+                npm install @shieldkit/react
               </pre>
             </div>
           </div>

@@ -13,7 +13,7 @@ export default function PlaygroundLayout() {
           Privacy Wallet Playground
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Interactive demo for @z-payment/react
+          Interactive demo for @shieldkit/react
         </p>
       </header>
 

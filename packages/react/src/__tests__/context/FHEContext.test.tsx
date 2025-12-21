@@ -4,7 +4,7 @@ import { FHEProvider, useFHEContext } from '../../context/FHEContext'
 import { MockFHEProvider } from '../../test-utils'
 
 // Use manual mocks
-vi.mock('@z-payment/core')
+vi.mock('@shieldkit/core')
 vi.mock('wagmi')
 
 // Mock utils - keep this as inline mock since it's specific to this package

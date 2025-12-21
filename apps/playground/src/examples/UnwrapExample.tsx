@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useUnwrap } from '@z-payment/react'
+import { useUnwrap } from '@shieldkit/react'
 import type { Address } from 'viem'
 
 interface UnwrapExampleProps {
@@ -97,7 +97,7 @@ export default function UnwrapExample({ tokenAddress }: UnwrapExampleProps) {
 
       <div className="code-example">
         <h4>Code Example:</h4>
-        <pre>{`import { useUnwrap } from '@z-payment/react'
+        <pre>{`import { useUnwrap } from '@shieldkit/react'
 
 const { unwrap, isLoading, isFHEReady } = useUnwrap({
   tokenAddress: '0x...',

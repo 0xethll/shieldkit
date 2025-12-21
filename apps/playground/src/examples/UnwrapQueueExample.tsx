@@ -1,4 +1,4 @@
-import { useUnwrapQueue, useFinalizeUnwrap } from '@z-payment/react'
+import { useUnwrapQueue, useFinalizeUnwrap } from '@shieldkit/react'
 import type { Address } from 'viem'
 
 interface UnwrapQueueExampleProps {
@@ -132,7 +132,7 @@ export default function UnwrapQueueExample({ tokenAddress }: UnwrapQueueExampleP
 
       <div className="code-example">
         <h4>Code Example:</h4>
-        <pre>{`import { useUnwrapQueue, useFinalizeUnwrap } from '@z-payment/react'
+        <pre>{`import { useUnwrapQueue, useFinalizeUnwrap } from '@shieldkit/react'
 
 // Query pending unwrap requests
 const { unwrapRequests, refetch } = useUnwrapQueue({
