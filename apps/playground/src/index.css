@@ -14,10 +14,39 @@
   --color-accent: oklch(0.27 0.02 265);
   --color-accent-foreground: oklch(0.98 0.01 265);
 
-  /* Border radius */
+  /* Border radius - default values, will be overridden by ThemeProvider */
   --radius-lg: 0.5rem;
   --radius-md: calc(0.5rem - 2px);
   --radius-sm: calc(0.5rem - 4px);
+}
+
+/* Dynamic border radius utilities */
+.rounded-dynamic-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rounded-dynamic {
+  border-radius: var(--radius-md);
+}
+
+.rounded-dynamic-lg {
+  border-radius: var(--radius-lg);
+}
+
+.rounded-dynamic-xl {
+  border-radius: calc(var(--radius-lg) * 1.5);
+}
+
+.rounded-dynamic-2xl {
+  border-radius: calc(var(--radius-lg) * 2);
+}
+
+.rounded-dynamic-3xl {
+  border-radius: calc(var(--radius-lg) * 3);
+}
+
+.rounded-dynamic-full {
+  border-radius: 9999px;
 }
 
 :root {
