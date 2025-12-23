@@ -45,7 +45,7 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
     decimals: selectedTokenConfig?.decimals || 6,
     onSuccess: () => {
       console.log('Transfer successful!')
-      // Clear cached balance (force re-decrypt after transfer)
+      // Clear cached balance and refetch to update encrypted balance
       clearBalance(erc20Address)
       setRecipient('')
       setAmount('')
@@ -61,7 +61,7 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
 
   // Get cached balance to display
   const cachedBalance = getDecryptedBalance(erc20Address)
-  const displayBalance = decryptedBalance !== null ? decryptedBalance : cachedBalance
+  const displayBalance = cachedBalance
 
   // Calculate current balance in human-readable format
   const currentBalance = useMemo(() => {

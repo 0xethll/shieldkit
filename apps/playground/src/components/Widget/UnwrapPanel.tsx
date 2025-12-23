@@ -70,7 +70,7 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
 
   // Get cached balance to display
   const cachedBalance = getDecryptedBalance(erc20Address)
-  const displayBalance = decryptedBalance !== null ? decryptedBalance : cachedBalance
+  const displayBalance = cachedBalance
 
   // Calculate current balance in human-readable format
   const currentBalance = useMemo(() => {

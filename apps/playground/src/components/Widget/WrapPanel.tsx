@@ -97,7 +97,7 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
 
   // Get cached balance to display
   const cachedBalance = getDecryptedBalance(tokenAddress)
-  const displayBalance = decryptedBalance !== null ? decryptedBalance : cachedBalance
+  const displayBalance = cachedBalance
 
   const handleExecuteStep = async () => {
     if (!amount || parseFloat(amount) <= 0) {
