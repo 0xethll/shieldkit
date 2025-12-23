@@ -10,7 +10,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from 'wagmi'
-import { isAddress, type Address, type Hash } from 'viem'
+import { isAddress, toHex, type Address, type Hash } from 'viem'
 import { ConfidentialERC20WrapperABI } from '../abis'
 import { useFHEContext } from '../context/FHEContext'
 
@@ -167,6 +167,7 @@ export function useTransfer(params: UseTransferParams = {}): UseTransferReturn {
         }
 
         // Encrypt the transfer amount
+        console.log('Encrypting amount:', amountWei)
         const { handle, proof } = await encryptUint64(
           fheInstance,
           tokenAddress,
@@ -174,16 +175,12 @@ export function useTransfer(params: UseTransferParams = {}): UseTransferReturn {
           amountWei,
         )
 
-        // Convert to hex strings
-        const encryptedAmount = `0x${Buffer.from(handle).toString('hex')}` as `0x${string}`
-        const inputProof = `0x${Buffer.from(proof).toString('hex')}` as `0x${string}`
-
         // Call the confidentialTransfer function
         writeContract({
           address: tokenAddress,
           abi: ConfidentialERC20WrapperABI,
           functionName: 'confidentialTransfer',
-          args: [recipient, encryptedAmount, inputProof],
+          args: [recipient, toHex(handle), toHex(proof)],
         })
       } catch (error) {
         const message =

@@ -6,7 +6,7 @@ import { Send, Loader2, CheckCircle2, AlertCircle, Lock } from 'lucide-react'
 import type { Address } from 'viem'
 import type { TokenConfig } from '../../config/scenarios'
 import TokenSelector from './TokenSelector'
-import { getTokenPrefix } from './tokenUtils'
+import { getTokenPrefix, formatErrorMessage } from './utils'
 
 interface TransferPanelProps {
   tokens: TokenConfig[]
@@ -221,15 +221,6 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
               <p className="text-sm font-medium text-green-600 dark:text-green-400">
                 Transfer successful!
               </p>
-              <p className="text-xs text-muted-foreground font-mono mt-1">
-                {txHash.slice(0, 10)}...{txHash.slice(-8)}
-              </p>
-              <button
-                onClick={reset}
-                className="text-xs text-green-600 dark:text-green-400 hover:underline mt-1"
-              >
-                Send another
-              </button>
             </div>
           </div>
         </div>
@@ -242,7 +233,7 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
             <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium text-red-600 dark:text-red-400">
-                Error: {error}
+                Error: {formatErrorMessage(error)}
               </p>
               <button
                 onClick={reset}

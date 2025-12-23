@@ -14,7 +14,7 @@ import type { Address } from 'viem'
 import type { TokenConfig } from '../../config/scenarios'
 import TokenSelector from './TokenSelector'
 import QueueItem from './QueueItem'
-import { getTokenPrefix } from './tokenUtils'
+import { getTokenPrefix, formatErrorMessage } from './utils'
 
 interface UnwrapPanelProps {
   tokens: TokenConfig[]
@@ -217,15 +217,6 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
                 <p className="text-sm font-medium text-green-600 dark:text-green-400">
                   Unwrap request submitted!
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Check pending unwraps below
-                </p>
-                <button
-                  onClick={reset}
-                  className="text-xs text-green-600 dark:text-green-400 hover:underline mt-1"
-                >
-                  Request another
-                </button>
               </div>
             </div>
           </div>
@@ -238,7 +229,7 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
               <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-red-600 dark:text-red-400">
-                  Error: {error}
+                  Error: {formatErrorMessage(error)}
                 </p>
                 <button
                   onClick={reset}

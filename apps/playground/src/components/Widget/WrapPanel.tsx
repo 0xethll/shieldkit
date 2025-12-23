@@ -1,13 +1,12 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useWrapFlow, useConfidentialBalanceFor } from '@shieldkit/react'
-import { Lock, Loader2, CheckCircle2, Rocket } from 'lucide-react'
+import { Lock, Loader2, CheckCircle2, Rocket, AlertCircle } from 'lucide-react'
 import type { Address } from 'viem'
 import type { TokenConfig } from '../../config/scenarios'
 import TokenSelector from './TokenSelector'
 import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import WrapStepIndicator from './WrapStepIndicator'
-import TransactionHistory from './TransactionHistory'
-import { getTokenPrefix } from './tokenUtils'
+import { getTokenPrefix, formatErrorMessage } from './utils'
 
 interface WrapPanelProps {
   tokens: TokenConfig[]
@@ -224,15 +223,6 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
         isWrapLoading={wrapTx.isLoading}
       />
 
-      {/* Transaction History */}
-      <TransactionHistory
-        transactions={[
-          { label: 'Deploy Wrapper', state: deployTx },
-          { label: 'Approve Tokens', state: approveTx },
-          { label: 'Wrap to Private', state: wrapTx },
-        ]}
-      />
-
       {/* Wrap Button */}
       <button
         onClick={handleExecuteStep}
@@ -252,14 +242,25 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
               <p className="text-sm font-medium text-green-600 dark:text-green-400">
                 Wrap successful!
               </p>
-              <p className="text-xs text-muted-foreground font-mono mt-1">
-                {txHash.slice(0, 10)}...{txHash.slice(-8)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error State */}
+      {(deployTx.error || approveTx.error || wrapTx.error) && (
+        <div className="px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-dynamic-xl">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-red-600 dark:text-red-400">
+                Error: {formatErrorMessage(deployTx.error || approveTx.error || wrapTx.error)}
               </p>
               <button
                 onClick={reset}
-                className="text-xs text-green-600 dark:text-green-400 hover:underline mt-1"
+                className="text-xs text-red-600 dark:text-red-400 hover:underline mt-1"
               >
-                Wrap more
+                Try again
               </button>
             </div>
           </div>
