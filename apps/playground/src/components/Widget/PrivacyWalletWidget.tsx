@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useFHEContext } from '@shieldkit/react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
-import { ConfidentialBalanceProvider } from '../../contexts/ConfidentialBalanceContext'
 import { useTokenBalances } from '../../hooks/useTokenBalances'
 import WrapPanel from './WrapPanel'
 import TransferPanel from './TransferPanel'
@@ -36,7 +35,6 @@ export default function PrivacyWalletWidget() {
   }, [activeTab, tabs])
 
   return (
-    <ConfidentialBalanceProvider>
       <div className="w-full">
         {/* Header */}
         <div className="px-6 py-5 border-b border-border/50">
@@ -122,6 +120,5 @@ export default function PrivacyWalletWidget() {
           )}
         </div>
       </div>
-    </ConfidentialBalanceProvider>
   )
 }

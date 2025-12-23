@@ -1,10 +1,14 @@
 import { FHEProvider } from '@shieldkit/react'
 import PlaygroundLayout from './components/Playground/PlaygroundLayout'
+import { ConfidentialBalanceProvider } from './contexts/ConfidentialBalanceContext'
+
 
 function App() {
   return (
     <FHEProvider>
-      <PlaygroundLayout />
+      <ConfidentialBalanceProvider>
+        <PlaygroundLayout />
+      </ConfidentialBalanceProvider>
     </FHEProvider>
   )
 }

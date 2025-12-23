@@ -37,6 +37,20 @@ export type { FHEContextType, FHEProviderProps } from './context/FHEContext'
 export { useWrap } from './hooks/useWrap'
 export type { UseWrapParams, UseWrapReturn } from './hooks/useWrap'
 
+export { useAllowance } from './hooks/useAllowance'
+export type { UseAllowanceParams, UseAllowanceReturn } from './hooks/useAllowance'
+
+export { useApproval } from './hooks/useApproval'
+export type { UseApprovalParams, UseApprovalReturn } from './hooks/useApproval'
+
+export { useWrapFlow } from './hooks/useWrapFlow'
+export type {
+  UseWrapFlowParams,
+  UseWrapFlowReturn,
+  WrapFlowStep,
+  TransactionState,
+} from './hooks/useWrapFlow'
+
 export { useUnwrap } from './hooks/useUnwrap'
 export type { UseUnwrapParams, UseUnwrapReturn } from './hooks/useUnwrap'
 
