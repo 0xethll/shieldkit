@@ -1,6 +1,6 @@
 import type { Address } from 'viem'
 
-export type ScenarioId = 'lending' | 'payment' | 'quickstart'
+export type ScenarioId = 'lending' | 'payment' | 'defi'
 export type DefaultTab = 'wrap' | 'transfer' | 'unwrap'
 
 export interface TokenConfig {
@@ -15,7 +15,6 @@ export interface ScenarioConfig {
   name: string
   description: string
   defaultTab: DefaultTab
-  tokens: TokenConfig[]
   features: {
     wrap: boolean
     transfer: boolean
@@ -29,20 +28,40 @@ export interface ScenarioConfig {
   }
 }
 
+export const TOKENS: TokenConfig[] = [
+  {
+    address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+    name: 'Sepolia USDC',
+    symbol: 'USDC',
+    decimals: 6,
+  },
+  {
+    address: '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06',
+    name: 'Test Tether USD',
+    symbol: 'USDT',
+    decimals: 6,
+  },
+  {
+    address: '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9',
+    name: 'Wrapped Ether',
+    symbol: 'WETH',
+    decimals: 18,
+  },
+  {
+    address: '0xb060796D171EeEdA5Fb99df6B2847DA6D4613CAd',
+    name: 'wBTC',
+    symbol: 'wBTC',
+    decimals: 8,
+  },
+  // Add more Sepolia testnet tokens here as needed
+]
+
 export const scenarios: Record<ScenarioId, ScenarioConfig> = {
   lending: {
     id: 'lending',
     name: 'Privacy Lending',
     description: 'Private asset deposit for lending protocols',
     defaultTab: 'wrap',
-    tokens: [
-      {
-        symbol: 'USDC',
-        address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
-        decimals: 6,
-        name: 'Sepolia USDC',
-      },
-    ],
     features: {
       wrap: true,
       transfer: false,
@@ -60,20 +79,6 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
     name: 'P2P Payment',
     description: 'Private peer-to-peer transfers',
     defaultTab: 'transfer',
-    tokens: [
-      {
-        symbol: 'USDT',
-        address: '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06',
-        decimals: 6,
-        name: 'Test Tether USD',
-      },
-      {
-        symbol: 'USDC',
-        address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
-        decimals: 6,
-        name: 'Sepolia USDC',
-      },
-    ],
     features: {
       wrap: true,
       transfer: true,
@@ -86,31 +91,11 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       type: 'payment',
     },
   },
-  quickstart: {
-    id: 'quickstart',
-    name: 'Quick Start',
+  defi: {
+    id: 'defi',
+    name: 'DeFi',
     description: 'Full-featured privacy wallet demo',
     defaultTab: 'wrap',
-    tokens: [
-      {
-        symbol: 'USDC',
-        address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
-        decimals: 6,
-        name: 'Sepolia USDC',
-      },
-      {
-        symbol: 'USDT',
-        address: '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06',
-        decimals: 6,
-        name: 'Test Tether USD',
-      },
-      {
-        symbol: 'USD',
-        address: '0xA9062b4629bc8fB79cB4eE904C5c9E179e9F492a',
-        decimals: 6,
-        name: 'USD Token',
-      },
-    ],
     features: {
       wrap: true,
       transfer: true,
@@ -125,4 +110,4 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
   },
 }
 
-export const defaultScenario: ScenarioConfig = scenarios.quickstart
+export const defaultScenario: ScenarioConfig = scenarios.defi

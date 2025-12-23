@@ -1,5 +1,5 @@
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
-import { scenarios, type ScenarioId } from '../../config/scenarios'
+import { scenarios, type ScenarioId, TOKENS, type TokenConfig } from '../../config/scenarios'
 import {
   Target,
   Coins,
@@ -29,11 +29,11 @@ export default function ConfigurationPanel() {
     generateCode,
   } = usePlaygroundConfig()
 
-  const availableTokens = ['USDC', 'USDT', 'DAI', 'WETH']
+  const toggleToken = (token: TokenConfig) => {
+    const exists = customTokens.some((t) => t.address === token.address)
 
-  const toggleToken = (token: string) => {
-    if (customTokens.includes(token)) {
-      setTokens(customTokens.filter((t) => t !== token))
+    if (exists) {
+      setTokens(customTokens.filter((t) => t.address !== token.address))
     } else {
       setTokens([...customTokens, token])
     }
@@ -77,20 +77,24 @@ export default function ConfigurationPanel() {
           <h3 className="font-semibold text-sm">Token Configuration</h3>
         </div>
         <div className="space-y-2">
-          {availableTokens.map((token) => (
+          {TOKENS.map((token) => {
+            const isSelected = customTokens.some(t => t.address === token.address)
+
+            return (
             <label
-              key={token}
+              key={token.address}
               className="flex items-center gap-3 p-3 bg-secondary border border-border rounded-lg cursor-pointer hover:bg-accent transition-colors"
             >
               <input
                 type="checkbox"
-                checked={customTokens.includes(token)}
+                checked={isSelected}
                 onChange={() => toggleToken(token)}
                 className="w-4 h-4 accent-primary"
               />
-              <span className="text-sm font-medium">{token}</span>
+              <span className="text-sm font-medium">{token.symbol}</span>
             </label>
-          ))}
+          
+          )})}
         </div>
       </section>
 

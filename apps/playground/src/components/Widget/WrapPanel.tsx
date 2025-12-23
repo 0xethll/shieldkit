@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useWrap, useConfidentialBalanceFor } from '@shieldkit/react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import { Lock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
@@ -15,14 +15,16 @@ interface WrapPanelProps {
 
 export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPanelProps) {
   const { features } = usePlaygroundConfig()
-  const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
+  const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || '')
   const [amount, setAmount] = useState('')
 
-  // Get selected token config
-  const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
+  const selectedTokenConfig = useMemo(() => {
+    return tokens.find((t) => t.symbol === selectedToken)
+  }, [tokens, selectedToken])
+
   const tokenAddress = selectedTokenConfig?.address as Address
 
-  const { clearBalance } = useConfidentialBalance()
+  const { getDecryptedBalance, cacheDecryptedBalance, clearBalance } = useConfidentialBalance()
   
   // Use new hook from @shieldkit/react to get wrapped token info
   const {
@@ -51,6 +53,17 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
       setAmount('')
     },
   })
+
+  // Cache decrypted balance when it becomes available
+  useEffect(() => {
+    if (decryptedBalance !== null && tokenAddress) {
+      cacheDecryptedBalance(tokenAddress, decryptedBalance)
+    }
+  }, [decryptedBalance, tokenAddress, cacheDecryptedBalance])
+
+  // Get cached balance to display
+  const cachedBalance = getDecryptedBalance(tokenAddress)
+  const displayBalance = decryptedBalance !== null ? decryptedBalance : cachedBalance
 
   const handleWrap = async () => {
     if (!amount || parseFloat(amount) <= 0) {
@@ -114,16 +127,16 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
           </div>
         ) : wrappedAddress ? (
           <>
-            {decryptedBalance !== null ? (
+            {displayBalance !== null ? (
               <div className="text-lg font-bold font-mono">
-                {(Number(decryptedBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
+                {(Number(displayBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
               </div>
             ) : (
               <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
             )}
             <button
               onClick={decrypt}
-              disabled={isDecrypting || !encryptedBalance}
+              disabled={isDecrypting || !encryptedBalance || displayBalance !== null}
               className="text-xs text-primary hover:underline mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isDecrypting ? '⏳ Decrypting...' : '🔓 Decrypt to view'}

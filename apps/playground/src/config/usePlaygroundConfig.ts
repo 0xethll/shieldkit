@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { scenarios, defaultScenario, type ScenarioId, type ScenarioConfig, type TokenConfig } from './scenarios'
+import { scenarios, defaultScenario, TOKENS, type ScenarioId, type ScenarioConfig, type TokenConfig } from './scenarios'
 import { defaultTheme, type ThemeConfig, type ThemeType, type AccentColor, type RadiusSize } from './themes'
 
 export interface PlaygroundState {
@@ -39,7 +39,7 @@ export interface PlaygroundState {
 export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
   // Initial state
   currentScenario: defaultScenario,
-  customTokens: defaultScenario.tokens,
+  customTokens: TOKENS,
   defaultTab: defaultScenario.defaultTab,
   features: defaultScenario.features,
   theme: defaultTheme,
@@ -50,7 +50,7 @@ export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
     const scenario = scenarios[scenarioId]
     set({
       currentScenario: scenario,
-      customTokens: scenario.tokens,
+      customTokens: TOKENS,
       defaultTab: scenario.defaultTab,
       features: scenario.features,
     })

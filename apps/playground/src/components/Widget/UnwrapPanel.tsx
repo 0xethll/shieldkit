@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useUnwrap, useUnwrapQueue, useConfidentialBalanceFor } from '@shieldkit/react'
 import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
@@ -21,7 +21,7 @@ interface UnwrapPanelProps {
 }
 
 export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProps) {
-  const { getDecryptedBalance, clearBalance } = useConfidentialBalance()
+  const { getDecryptedBalance, cacheDecryptedBalance, clearBalance } = useConfidentialBalance()
 
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
@@ -59,6 +59,17 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
   const { unwrapRequests, isLoading: isQueueLoading } = useUnwrapQueue({
     tokenAddress, graphqlUrl: ''
   })
+
+  // Cache decrypted balance when it becomes available
+  useEffect(() => {
+    if (decryptedBalance !== null && erc20Address) {
+      cacheDecryptedBalance(erc20Address, decryptedBalance)
+    }
+  }, [decryptedBalance, erc20Address, cacheDecryptedBalance])
+
+  // Get cached balance to display
+  const cachedBalance = getDecryptedBalance(erc20Address)
+  const displayBalance = decryptedBalance !== null ? decryptedBalance : cachedBalance
 
   const handleUnwrap = async () => {
     if (!amount || parseFloat(amount) <= 0) {
@@ -134,16 +145,16 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
             </div>
           ) : wrappedAddress ? (
             <>
-              {decryptedBalance !== null ? (
+              {displayBalance !== null ? (
                 <div className="text-lg font-bold font-mono">
-                  {(Number(decryptedBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
+                  {(Number(displayBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
                 </div>
               ) : (
                 <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
               )}
               <button
                 onClick={decrypt}
-                disabled={isDecrypting || !encryptedBalance}
+                disabled={isDecrypting || !encryptedBalance || displayBalance !== null}
                 className="text-xs text-primary hover:underline mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isDecrypting ? '⏳ Decrypting...' : '🔓 Decrypt to view'}
