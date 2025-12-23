@@ -1,7 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useWrapFlow, useConfidentialBalanceFor } from '@shieldkit/react'
-import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
-import { Lock, Loader2, CheckCircle2, AlertCircle, Rocket } from 'lucide-react'
+import { Lock, Loader2, CheckCircle2, Rocket } from 'lucide-react'
 import type { Address } from 'viem'
 import type { TokenConfig } from '../../config/scenarios'
 import TokenSelector from './TokenSelector'
@@ -22,6 +21,21 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
   const selectedTokenConfig = useMemo(() => {
     return tokens.find((t) => t.symbol === selectedToken)
   }, [tokens, selectedToken])
+
+  // Get current ERC20 balance
+  const currentBalance = useMemo(() => {
+    const balanceStr = getBalance?.(selectedToken)
+    if (!balanceStr) return 0
+    const parsed = parseFloat(balanceStr)
+    return isNaN(parsed) ? 0 : parsed
+  }, [selectedToken, getBalance])
+
+  // Check if amount exceeds balance
+  const amountExceedsBalance = useMemo(() => {
+    if (!amount) return false
+    const amountNum = parseFloat(amount)
+    return amountNum > currentBalance
+  }, [amount, currentBalance])
 
   const tokenAddress = selectedTokenConfig?.address as Address
 
@@ -74,6 +88,12 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
       cacheDecryptedBalance(tokenAddress, decryptedBalance)
     }
   }, [decryptedBalance, tokenAddress, cacheDecryptedBalance])
+
+  // Reset flow state when token changes
+  useEffect(() => {
+    reset()
+    setAmount('')
+  }, [selectedToken, reset])
 
   // Get cached balance to display
   const cachedBalance = getDecryptedBalance(tokenAddress)
@@ -141,12 +161,19 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
             min="0"
           />
           <button
-            onClick={() => setAmount('100')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 rounded-dynamic transition-colors"
+            onClick={() => setAmount(currentBalance.toString())}
+            disabled={isLoading || currentBalance === 0}
+            className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 rounded-dynamic transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             MAX
           </button>
         </div>
+        {/* Insufficient Balance Error */}
+        {amountExceedsBalance && (
+          <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+            Insufficient balance. Available: {currentBalance.toFixed(4)} {selectedToken}
+          </p>
+        )}
       </div>
 
       {/* Private Balance Display */}
@@ -208,7 +235,7 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
       {/* Wrap Button */}
       <button
         onClick={handleExecuteStep}
-        disabled={isLoading || !amount || parseFloat(amount) <= 0}
+        disabled={isLoading || !amount || parseFloat(amount) <= 0 || amountExceedsBalance}
         className="w-full px-4 py-3.5 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground rounded-dynamic-xl font-semibold text-sm transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {getButtonIcon()}
