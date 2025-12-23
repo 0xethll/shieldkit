@@ -1,24 +1,53 @@
 import { useState } from 'react'
-import { useWrap } from '@shieldkit/react'
+import { useWrap, useConfidentialBalanceFor } from '@shieldkit/react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
-import { SEPOLIA_TEST_TOKENS } from '../../config'
-import { ChevronDown, Lock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Lock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import type { Address } from 'viem'
+import type { TokenConfig } from '../../config/scenarios'
+import TokenSelector from './TokenSelector'
+import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 
-export default function WrapPanel() {
-  const { customTokens, features } = usePlaygroundConfig()
-  const [selectedToken, setSelectedToken] = useState(customTokens[0] || 'USDC')
+interface WrapPanelProps {
+  tokens: TokenConfig[]
+  getBalance?: (token: string) => string | null
+  onWrapSuccess?: (token: string) => void
+}
+
+export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPanelProps) {
+  const { features } = usePlaygroundConfig()
+  const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
-  const [isTokenSelectorOpen, setIsTokenSelectorOpen] = useState(false)
 
-  // Get token address - in real app, you'd have a mapping
-  const tokenAddress = SEPOLIA_TEST_TOKENS.wrapper as Address
+  // Get selected token config
+  const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
+  const tokenAddress = selectedTokenConfig?.address as Address
+
+  const { clearBalance } = useConfidentialBalance()
+  
+  // Use new hook from @shieldkit/react to get wrapped token info
+  const {
+    wrappedAddress,
+    isLoadingWrapped,
+    encryptedBalance,
+    decryptedBalance,
+    decrypt,
+    isDecrypting,
+  } = useConfidentialBalanceFor({
+    erc20Address: tokenAddress,
+    autoDecrypt: false, // Manual decrypt on button click
+  })
 
   const { wrap, isLoading, isSuccess, error, txHash, reset } = useWrap({
     tokenAddress,
-    decimals: 6,
+    decimals: selectedTokenConfig?.decimals || 6,
     onSuccess: () => {
       console.log('Wrap successful!')
+      clearBalance(tokenAddress)
+
+      // Update ERC20 balance (decrease)
+      if (onWrapSuccess) {
+        onWrapSuccess(selectedToken)
+      }
       setAmount('')
     },
   })
@@ -38,52 +67,14 @@ export default function WrapPanel() {
   return (
     <div className="space-y-4">
       {/* Token Selector */}
-      <div>
-        <label className="block text-xs font-medium text-muted-foreground mb-2">
-          Select Token
-        </label>
-        <div className="relative">
-          <button
-            onClick={() => setIsTokenSelectorOpen(!isTokenSelectorOpen)}
-            className="w-full px-4 py-3 bg-secondary border border-border rounded-dynamic-xl flex items-center justify-between hover:bg-accent transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-xs font-bold">
-                {selectedToken[0]}
-              </div>
-              <div className="text-left">
-                <div className="font-semibold text-sm">{selectedToken}</div>
-                <div className="text-xs text-muted-foreground">Balance: 1,000.00</div>
-              </div>
-            </div>
-            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isTokenSelectorOpen ? 'rotate-180' : ''}`} />
-          </button>
-
-          {/* Dropdown */}
-          {isTokenSelectorOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-background border border-border rounded-dynamic-xl shadow-lg z-10">
-              {customTokens.map((token) => (
-                <button
-                  key={token}
-                  onClick={() => {
-                    setSelectedToken(token)
-                    setIsTokenSelectorOpen(false)
-                  }}
-                  className="w-full px-3 py-2.5 hover:bg-secondary rounded-dynamic-lg flex items-center gap-3 transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-xs font-bold">
-                    {token[0]}
-                  </div>
-                  <div className="text-left">
-                    <div className="font-semibold text-sm">{token}</div>
-                    <div className="text-xs text-muted-foreground">1,000.00</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <TokenSelector
+        tokens={tokens.map(t => t.symbol)}
+        tokenType="erc20"
+        selectedToken={selectedToken}
+        onTokenSelect={setSelectedToken}
+        getBalance={getBalance}
+        disabled={isLoading}
+      />
 
       {/* Amount Input */}
       <div>
@@ -116,10 +107,33 @@ export default function WrapPanel() {
           <span className="text-xs text-muted-foreground">Private Balance</span>
           <Lock className="w-3 h-3 text-primary" />
         </div>
-        <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
-        <button className="text-xs text-primary hover:underline mt-1">
-          🔓 Decrypt to view
-        </button>
+        {isLoadingWrapped ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-3 h-3 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground">Checking wrapper...</span>
+          </div>
+        ) : wrappedAddress ? (
+          <>
+            {decryptedBalance !== null ? (
+              <div className="text-lg font-bold font-mono">
+                {(Number(decryptedBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
+              </div>
+            ) : (
+              <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
+            )}
+            <button
+              onClick={decrypt}
+              disabled={isDecrypting || !encryptedBalance}
+              className="text-xs text-primary hover:underline mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isDecrypting ? '⏳ Decrypting...' : '🔓 Decrypt to view'}
+            </button>
+          </>
+        ) : (
+          <div className="text-sm text-muted-foreground">
+            Wrapper not deployed yet
+          </div>
+        )}
       </div>
 
       {/* Auto-Deploy Info */}

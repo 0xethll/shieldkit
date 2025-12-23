@@ -46,9 +46,9 @@ export const UNWRAP_REQUESTS_QUERY = `
  */
 export interface UseUnwrapQueueParams {
   /** Address of the confidential token */
-  tokenAddress?: Address
+  tokenAddress: Address
   /** GraphQL endpoint URL (defaults to NEXT_PUBLIC_ENVIO_GRAPHQL_URL or localhost) */
-  graphqlUrl?: string
+  graphqlUrl: string
   /** Whether to fetch finalized or pending requests (default: false - pending only) */
   includeFinalized?: boolean
   /** Auto-refetch interval in milliseconds (default: 10000ms) */
@@ -99,14 +99,11 @@ export interface UseUnwrapQueueReturn {
  * ```
  */
 export function useUnwrapQueue(
-  params: UseUnwrapQueueParams = {},
+  params: UseUnwrapQueueParams,
 ): UseUnwrapQueueReturn {
   const {
     tokenAddress,
-    graphqlUrl = typeof process !== 'undefined'
-      ? process.env.NEXT_PUBLIC_ENVIO_GRAPHQL_URL ||
-        'http://localhost:8080/v1/graphql'
-      : 'http://localhost:8080/v1/graphql',
+    graphqlUrl,
     includeFinalized = false,
     refetchInterval = 10000,
     enableAutoRefetch = false,
@@ -131,7 +128,7 @@ export function useUnwrapQueue(
    * Fetch unwrap requests from the indexer
    */
   const fetchRequests = useCallback(async () => {
-    if (!userAddress || !tokenAddress) {
+    if (!userAddress) {
       setUnwrapRequests([])
       return
     }

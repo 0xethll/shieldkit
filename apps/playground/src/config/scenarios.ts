@@ -1,12 +1,21 @@
+import type { Address } from 'viem'
+
 export type ScenarioId = 'lending' | 'payment' | 'quickstart'
 export type DefaultTab = 'wrap' | 'transfer' | 'unwrap'
+
+export interface TokenConfig {
+  symbol: string
+  address: Address
+  decimals: number
+  name: string
+}
 
 export interface ScenarioConfig {
   id: ScenarioId
   name: string
   description: string
   defaultTab: DefaultTab
-  tokens: string[]
+  tokens: TokenConfig[]
   features: {
     wrap: boolean
     transfer: boolean
@@ -26,7 +35,14 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
     name: 'Privacy Lending',
     description: 'Private asset deposit for lending protocols',
     defaultTab: 'wrap',
-    tokens: ['USDC'],
+    tokens: [
+      {
+        symbol: 'USDC',
+        address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+        decimals: 6,
+        name: 'Sepolia USDC',
+      },
+    ],
     features: {
       wrap: true,
       transfer: false,
@@ -44,7 +60,20 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
     name: 'P2P Payment',
     description: 'Private peer-to-peer transfers',
     defaultTab: 'transfer',
-    tokens: ['USDT', 'USDC'],
+    tokens: [
+      {
+        symbol: 'USDT',
+        address: '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06',
+        decimals: 6,
+        name: 'Test Tether USD',
+      },
+      {
+        symbol: 'USDC',
+        address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+        decimals: 6,
+        name: 'Sepolia USDC',
+      },
+    ],
     features: {
       wrap: true,
       transfer: true,
@@ -62,7 +91,26 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
     name: 'Quick Start',
     description: 'Full-featured privacy wallet demo',
     defaultTab: 'wrap',
-    tokens: ['USDC', 'USDT', 'DAI'],
+    tokens: [
+      {
+        symbol: 'USDC',
+        address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+        decimals: 6,
+        name: 'Sepolia USDC',
+      },
+      {
+        symbol: 'USDT',
+        address: '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06',
+        decimals: 6,
+        name: 'Test Tether USD',
+      },
+      {
+        symbol: 'USD',
+        address: '0xA9062b4629bc8fB79cB4eE904C5c9E179e9F492a',
+        decimals: 6,
+        name: 'USD Token',
+      },
+    ],
     features: {
       wrap: true,
       transfer: true,

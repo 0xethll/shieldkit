@@ -1,11 +1,11 @@
 import { create } from 'zustand'
-import { scenarios, defaultScenario, type ScenarioId, type ScenarioConfig } from './scenarios'
+import { scenarios, defaultScenario, type ScenarioId, type ScenarioConfig, type TokenConfig } from './scenarios'
 import { defaultTheme, type ThemeConfig, type ThemeType, type AccentColor, type RadiusSize } from './themes'
 
 export interface PlaygroundState {
   // Scenario configuration
   currentScenario: ScenarioConfig
-  customTokens: string[]
+  customTokens: TokenConfig[]
   defaultTab: 'wrap' | 'transfer' | 'unwrap'
   features: {
     wrap: boolean
@@ -22,7 +22,7 @@ export interface PlaygroundState {
 
   // Actions
   setScenario: (scenarioId: ScenarioId) => void
-  setTokens: (tokens: string[]) => void
+  setTokens: (tokens: TokenConfig[]) => void
   setDefaultTab: (tab: 'wrap' | 'transfer' | 'unwrap') => void
   toggleFeature: (feature: keyof PlaygroundState['features']) => void
   setThemeType: (type: ThemeType) => void
@@ -96,8 +96,9 @@ export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
     // Generate imports
     const imports = `import { PrivacyWallet } from '@shieldkit/react'\n`
 
-    // Generate component code
-    const tokensArray = customTokens.length > 0 ? `['${customTokens.join("', '")}']` : '[]'
+    // Generate component code - use token symbols for cleaner code
+    const tokenSymbols = customTokens.map(t => t.symbol)
+    const tokensArray = tokenSymbols.length > 0 ? `['${tokenSymbols.join("', '")}']` : '[]'
     const featuresObj = `{
   wrap: ${features.wrap},
   transfer: ${features.transfer},

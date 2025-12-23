@@ -1,23 +1,48 @@
 import { useState } from 'react'
-import { useTransfer } from '@shieldkit/react'
-import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
+import { useTransfer, useConfidentialBalanceFor } from '@shieldkit/react'
+import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
 import { Send, Loader2, CheckCircle2, AlertCircle, Lock } from 'lucide-react'
 import type { Address } from 'viem'
+import type { TokenConfig } from '../../config/scenarios'
+import TokenSelector from './TokenSelector'
 
-export default function TransferPanel() {
-  const { customTokens } = usePlaygroundConfig()
-  const [selectedToken, setSelectedToken] = useState(customTokens[0] || 'USDC')
+interface TransferPanelProps {
+  tokens: TokenConfig[]
+}
+
+export default function TransferPanel({ tokens }: TransferPanelProps) {
+  const { getDecryptedBalance, clearBalance } = useConfidentialBalance()
+
+  const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
 
-  const tokenAddress = SEPOLIA_TEST_TOKENS.wrapper as Address
+  // Get selected token config
+  const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
+  const erc20Address = selectedTokenConfig?.address as Address
+
+  const {
+    wrappedAddress,
+    isLoadingWrapped,
+    encryptedBalance,
+    decryptedBalance,
+    decrypt,
+    isDecrypting,
+  } = useConfidentialBalanceFor({
+    erc20Address,
+    autoDecrypt: false,
+  })
+
+  const tokenAddress = wrappedAddress || (SEPOLIA_TEST_TOKENS.wrapper as Address)
 
   const { transfer, isLoading, isSuccess, error, txHash, reset } = useTransfer({
     tokenAddress,
-    decimals: 6,
+    decimals: selectedTokenConfig?.decimals || 6,
     onSuccess: () => {
       console.log('Transfer successful!')
+      // Clear cached balance (force re-decrypt after transfer)
+      clearBalance(erc20Address)
       setRecipient('')
       setAmount('')
     },
@@ -37,6 +62,26 @@ export default function TransferPanel() {
 
   return (
     <div className="space-y-4">
+      {/* Token Selector */}
+      <TokenSelector
+        tokens={tokens.map(t => t.symbol)}
+        tokenType="wrapped"
+        selectedToken={selectedToken}
+        onTokenSelect={setSelectedToken}
+        getBalance={(token) => {
+          // Get cached decrypted balance from context
+          const config = tokens.find((t) => t.symbol === token)
+          if (!config) return null
+
+          const cachedBalance = getDecryptedBalance(config.address as Address)
+          if (cachedBalance !== null) {
+            return (Number(cachedBalance) / 10 ** config.decimals).toFixed(4)
+          }
+          return null // Not decrypted yet
+        }}
+        disabled={isLoading}
+      />
+
       {/* Recipient Address */}
       <div>
         <label className="block text-xs font-medium text-muted-foreground mb-2">
@@ -83,10 +128,33 @@ export default function TransferPanel() {
           <span className="text-xs text-muted-foreground">Encrypted Balance</span>
           <Lock className="w-3 h-3 text-primary" />
         </div>
-        <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
-        <button className="text-xs text-primary hover:underline mt-1">
-          🔓 Decrypt to view
-        </button>
+        {isLoadingWrapped ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-3 h-3 animate-spin text-primary" />
+            <span className="text-sm text-muted-foreground">Checking wrapper...</span>
+          </div>
+        ) : wrappedAddress ? (
+          <>
+            {decryptedBalance !== null ? (
+              <div className="text-lg font-bold font-mono">
+                {(Number(decryptedBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
+              </div>
+            ) : (
+              <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
+            )}
+            <button
+              onClick={decrypt}
+              disabled={isDecrypting || !encryptedBalance}
+              className="text-xs text-primary hover:underline mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isDecrypting ? '⏳ Decrypting...' : '🔓 Decrypt to view'}
+            </button>
+          </>
+        ) : (
+          <div className="text-sm text-muted-foreground">
+            Wrapper not deployed yet
+          </div>
+        )}
       </div>
 
       {/* Privacy Notice */}

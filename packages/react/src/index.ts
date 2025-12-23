@@ -62,6 +62,17 @@ export type {
 export { useFactory, useWrappedTokenAddress } from './hooks/useFactory'
 export type { UseFactoryParams, UseFactoryReturn } from './hooks/useFactory'
 
+export {
+  useConfidentialBalance,
+  useConfidentialBalanceFor,
+} from './hooks/useConfidentialBalance'
+export type {
+  UseConfidentialBalanceParams,
+  UseConfidentialBalanceReturn,
+  UseConfidentialBalanceForParams,
+  UseConfidentialBalanceForReturn,
+} from './hooks/useConfidentialBalance'
+
 // Re-export core types for convenience
 export type {
   WrapParams,

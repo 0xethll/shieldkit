@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useUnwrap, useUnwrapQueue } from '@shieldkit/react'
-import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
+import { useUnwrap, useUnwrapQueue, useConfidentialBalanceFor } from '@shieldkit/react'
+import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
 import {
   Download,
@@ -11,25 +11,53 @@ import {
   Lock,
 } from 'lucide-react'
 import type { Address } from 'viem'
+import type { TokenConfig } from '../../config/scenarios'
+import TokenSelector from './TokenSelector'
+import QueueItem from './QueueItem'
 
-export default function UnwrapPanel() {
-  const { customTokens } = usePlaygroundConfig()
-  const [selectedToken, setSelectedToken] = useState(customTokens[0] || 'USDC')
+interface UnwrapPanelProps {
+  tokens: TokenConfig[]
+  onUnwrapSuccess?: (token: string) => void
+}
+
+export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProps) {
+  const { getDecryptedBalance, clearBalance } = useConfidentialBalance()
+
+  const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
 
-  const tokenAddress = SEPOLIA_TEST_TOKENS.wrapper as Address
+  // Get selected token config
+  const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
+  const erc20Address = selectedTokenConfig?.address as Address
+
+  // Use new hook from @shieldkit/react
+  const {
+    wrappedAddress,
+    isLoadingWrapped,
+    encryptedBalance,
+    decryptedBalance,
+    decrypt,
+    isDecrypting,
+  } = useConfidentialBalanceFor({
+    erc20Address,
+    autoDecrypt: false,
+  })
+
+  const tokenAddress = wrappedAddress || (SEPOLIA_TEST_TOKENS.wrapper as Address)
 
   const { unwrap, isLoading, isSuccess, error, txHash, reset } = useUnwrap({
     tokenAddress,
-    decimals: 6,
     onSuccess: () => {
       console.log('Unwrap request successful!')
+      // Clear cached balance
+      clearBalance(erc20Address)
+
       setAmount('')
     },
   })
 
-  const { queue, isLoading: isQueueLoading } = useUnwrapQueue({
-    tokenAddress,
+  const { unwrapRequests, isLoading: isQueueLoading } = useUnwrapQueue({
+    tokenAddress, graphqlUrl: ''
   })
 
   const handleUnwrap = async () => {
@@ -48,7 +76,25 @@ export default function UnwrapPanel() {
     <div className="space-y-6">
       {/* Request Unwrap Section */}
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold">Request Unwrap</h3>
+        {/* Token Selector */}
+        <TokenSelector
+          tokens={tokens.map(t => t.symbol)}
+          tokenType="wrapped"
+          selectedToken={selectedToken}
+          onTokenSelect={setSelectedToken}
+          getBalance={(token) => {
+            // Get cached decrypted balance from context
+            const config = tokens.find((t) => t.symbol === token)
+            if (!config) return null
+
+            const cachedBalance = getDecryptedBalance(config.address as Address)
+            if (cachedBalance !== null) {
+              return (Number(cachedBalance) / 10 ** config.decimals).toFixed(4)
+            }
+            return null // Not decrypted yet
+          }}
+          disabled={isLoading}
+        />
 
         {/* Amount Input */}
         <div>
@@ -81,10 +127,33 @@ export default function UnwrapPanel() {
             <span className="text-xs text-muted-foreground">Private Balance</span>
             <Lock className="w-3 h-3 text-primary" />
           </div>
-          <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
-          <button className="text-xs text-primary hover:underline mt-1">
-            🔓 Decrypt to view
-          </button>
+          {isLoadingWrapped ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="w-3 h-3 animate-spin text-primary" />
+              <span className="text-sm text-muted-foreground">Checking wrapper...</span>
+            </div>
+          ) : wrappedAddress ? (
+            <>
+              {decryptedBalance !== null ? (
+                <div className="text-lg font-bold font-mono">
+                  {(Number(decryptedBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
+                </div>
+              ) : (
+                <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
+              )}
+              <button
+                onClick={decrypt}
+                disabled={isDecrypting || !encryptedBalance}
+                className="text-xs text-primary hover:underline mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isDecrypting ? '⏳ Decrypting...' : '🔓 Decrypt to view'}
+              </button>
+            </>
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              Wrapper not deployed yet
+            </div>
+          )}
         </div>
 
         {/* Request Button */}
@@ -157,9 +226,9 @@ export default function UnwrapPanel() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold">Pending Unwraps</h3>
-          {queue && queue.length > 0 && (
+          {unwrapRequests && unwrapRequests.length > 0 && (
             <span className="text-xs text-muted-foreground">
-              {queue.length} pending
+              {unwrapRequests.length} pending
             </span>
           )}
         </div>
@@ -168,10 +237,10 @@ export default function UnwrapPanel() {
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
           </div>
-        ) : queue && queue.length > 0 ? (
+        ) : unwrapRequests && unwrapRequests.length > 0 ? (
           <div className="space-y-3">
-            {queue.map((item, index) => (
-              <QueueItem key={index} item={item} />
+            {unwrapRequests.map((item, index) => (
+              <QueueItem key={index} item={item} onFinalizeSuccess={onUnwrapSuccess} />
             ))}
           </div>
         ) : (
@@ -185,86 +254,3 @@ export default function UnwrapPanel() {
   )
 }
 
-interface QueueItemProps {
-  item: {
-    amount: string
-    status: 'decrypting' | 'ready'
-    requestTime: number
-    progress?: number
-  }
-}
-
-function QueueItem({ item }: QueueItemProps) {
-  const [isFinalizing, setIsFinalizing] = useState(false)
-
-  const handleFinalize = async () => {
-    setIsFinalizing(true)
-    // TODO: Implement finalize unwrap logic
-    setTimeout(() => setIsFinalizing(false), 2000)
-  }
-
-  const timeAgo = (timestamp: number) => {
-    const seconds = Math.floor((Date.now() - timestamp) / 1000)
-    if (seconds < 60) return `${seconds}s ago`
-    const minutes = Math.floor(seconds / 60)
-    if (minutes < 60) return `${minutes}m ago`
-    const hours = Math.floor(minutes / 60)
-    return `${hours}h ago`
-  }
-
-  return (
-    <div className="p-4 bg-secondary/50 border border-border rounded-dynamic-xl space-y-3">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="font-semibold">{item.amount} USDC</div>
-          <div className="text-xs text-muted-foreground mt-0.5">
-            Requested {timeAgo(item.requestTime)}
-          </div>
-        </div>
-        {item.status === 'ready' ? (
-          <CheckCircle2 className="w-5 h-5 text-green-500" />
-        ) : (
-          <Loader2 className="w-5 h-5 text-primary animate-spin" />
-        )}
-      </div>
-
-      {item.status === 'decrypting' && (
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Decrypting...</span>
-            <span className="text-primary font-medium">{item.progress || 45}%</span>
-          </div>
-          <div className="w-full h-1.5 bg-background rounded-dynamic-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-300"
-              style={{ width: `${item.progress || 45}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      <button
-        onClick={handleFinalize}
-        disabled={item.status !== 'ready' || isFinalizing}
-        className="w-full px-3 py-2 bg-primary hover:bg-primary/90 disabled:bg-muted text-primary-foreground rounded-dynamic-lg text-sm font-medium transition-colors disabled:cursor-not-allowed flex items-center justify-center gap-2"
-      >
-        {isFinalizing ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            Finalizing...
-          </>
-        ) : item.status === 'ready' ? (
-          <>
-            <CheckCircle2 className="w-4 h-4" />
-            Finalize Unwrap
-          </>
-        ) : (
-          <>
-            <Clock className="w-4 h-4" />
-            Pending
-          </>
-        )}
-      </button>
-    </div>
-  )
-}
