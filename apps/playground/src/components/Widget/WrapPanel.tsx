@@ -7,6 +7,7 @@ import TokenSelector from './TokenSelector'
 import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import WrapStepIndicator from './WrapStepIndicator'
 import TransactionHistory from './TransactionHistory'
+import { getTokenPrefix } from './tokenUtils'
 
 interface WrapPanelProps {
   tokens: TokenConfig[]
@@ -191,10 +192,10 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
           <>
             {displayBalance !== null ? (
               <div className="text-lg font-bold font-mono">
-                {(Number(displayBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {selectedToken}
+                {(Number(displayBalance) / 10 ** (selectedTokenConfig?.decimals || 6)).toFixed(4)} {getTokenPrefix('wrapped')}{selectedToken}
               </div>
             ) : (
-              <div className="text-lg font-bold font-mono">░░░.░░ {selectedToken}</div>
+              <div className="text-lg font-bold font-mono">░░░.░░ {getTokenPrefix('wrapped')}{selectedToken}</div>
             )}
             <button
               onClick={decrypt}
