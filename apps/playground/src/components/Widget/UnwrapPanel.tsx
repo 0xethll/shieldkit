@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useUnwrap, useUnwrapQueue, useConfidentialBalanceFor } from '@shieldkit/react'
 import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
+import { env } from '../../lib/env'
 import {
   Download,
   Loader2,
@@ -9,6 +10,8 @@ import {
   AlertCircle,
   Clock,
   Lock,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react'
 import type { Address } from 'viem'
 import type { TokenConfig } from '../../config/scenarios'
@@ -26,6 +29,7 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
 
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
+  const [isQueueExpanded, setIsQueueExpanded] = useState(true)
 
   // Get selected token config
   const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
@@ -58,7 +62,8 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
   })
 
   const { unwrapRequests, isLoading: isQueueLoading } = useUnwrapQueue({
-    tokenAddress, graphqlUrl: ''
+    tokenAddress,
+    graphqlUrl: env.graphqlUrl,
   })
 
   // Cache decrypted balance when it becomes available
@@ -99,7 +104,7 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
   }
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-[60%_40%] gap-6">
       {/* Request Unwrap Section */}
       <div className="space-y-4">
         {/* Token Selector */}
@@ -242,36 +247,49 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
         )}
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-border/50" />
-
       {/* Pending Unwraps Queue */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Pending Unwraps</h3>
-          {unwrapRequests && unwrapRequests.length > 0 && (
-            <span className="text-xs text-muted-foreground">
-              {unwrapRequests.length} pending
-            </span>
+      <div className="space-y-4 md:border-l md:border-border/50 ">
+        {/* Header - clickable on mobile */}
+        <button
+          onClick={() => setIsQueueExpanded(!isQueueExpanded)}
+          className="flex items-center justify-between w-full md:cursor-default"
+        >
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold">Pending Unwraps</h3>
+            {unwrapRequests && unwrapRequests.length > 0 && (
+              <span className="px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                {unwrapRequests.length}
+              </span>
+            )}
+          </div>
+          <div className="md:hidden">
+            {isQueueExpanded ? (
+              <ChevronUp className="w-4 h-4 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            )}
+          </div>
+        </button>
+
+        {/* Queue Content - collapsible on mobile, always visible on desktop */}
+        <div className={`${isQueueExpanded ? 'block' : 'hidden'} md:block`}>
+          {isQueueLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : unwrapRequests && unwrapRequests.length > 0 ? (
+            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+              {unwrapRequests.map((item, index) => (
+                <QueueItem key={index} item={item} onFinalizeSuccess={onUnwrapSuccess} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-8 text-center">
+              <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-50" />
+              <p className="text-sm text-muted-foreground">No pending unwraps</p>
+            </div>
           )}
         </div>
-
-        {isQueueLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : unwrapRequests && unwrapRequests.length > 0 ? (
-          <div className="space-y-3">
-            {unwrapRequests.map((item, index) => (
-              <QueueItem key={index} item={item} onFinalizeSuccess={onUnwrapSuccess} />
-            ))}
-          </div>
-        ) : (
-          <div className="py-8 text-center">
-            <Clock className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-muted-foreground">No pending unwraps</p>
-          </div>
-        )}
       </div>
     </div>
   )
