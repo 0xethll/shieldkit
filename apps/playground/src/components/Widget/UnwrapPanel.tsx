@@ -35,7 +35,6 @@ export default function UnwrapPanel({ tokens, getBalance, onUnwrapSuccess }: Unw
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
   const [isQueueExpanded, setIsQueueExpanded] = useState(true)
-  const [pendingFinalizeTx, setPendingFinalizeTx] = useState<string | null>(null)
 
   // Get selected token config
   const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
@@ -318,8 +317,6 @@ export default function UnwrapPanel({ tokens, getBalance, onUnwrapSuccess }: Unw
                       // Refetch the queue after finalization
                       setTimeout(() => refetch(), 1500)
                     }}
-                    isFinalizing={false}
-                    pendingTx={pendingFinalizeTx}
                     decimals={selectedTokenConfig?.decimals || 6}
                   />
                 ))}

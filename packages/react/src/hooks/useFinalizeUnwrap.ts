@@ -111,6 +111,7 @@ export function useFinalizeUnwrap(
   const { tokenAddress, onSuccess, decryptedCache } = params
   const { isFHEReady, fheInstance } = useFHEContext()
 
+  const [isDecrypting, setIsDecrypting] = useState(false)
   // Track which transaction is currently pending
   const [pendingTx, setPendingTx] = useState<string | null>(null)
 
@@ -143,10 +144,10 @@ export function useFinalizeUnwrap(
     if (isSuccess) {
       setPendingTx(null)
       onSuccessRef.current?.()
-    } else if (isConfirmError) {
+    } else if (isConfirmError || writeError) {
       setPendingTx(null)
     }
-  }, [isSuccess, isConfirmError])
+  }, [isSuccess, isConfirmError, writeError])
 
   /**
    * Finalize an unwrap request by providing the decrypted amount and proof
@@ -166,6 +167,7 @@ export function useFinalizeUnwrap(
       }
 
       try {
+        setIsDecrypting(true)
         let cleartextAmount: bigint
         let proof: `0x${string}`
 
@@ -197,6 +199,8 @@ export function useFinalizeUnwrap(
         setPendingTx(null)
         console.error('Finalize unwrap error:', error)
         throw error
+      } finally {
+        setIsDecrypting(false)
       }
     },
     [fheInstance, tokenAddress, decryptedCache, writeContract],
@@ -204,7 +208,7 @@ export function useFinalizeUnwrap(
 
   return {
     finalizeUnwrap,
-    isFinalizing: isWritePending || isConfirming,
+    isFinalizing: isDecrypting || isWritePending || isConfirming,
     isSuccess,
     error: writeError?.message || confirmError?.message,
     txHash,
