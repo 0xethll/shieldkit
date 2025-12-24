@@ -4,13 +4,13 @@
  * React hook for unwrapping confidential tokens back to ERC20 tokens
  */
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from 'wagmi'
-import { type Address, type Hash } from 'viem'
+import { toHex, type Address, type Hash } from 'viem'
 import { ConfidentialERC20WrapperABI } from '../abis'
 import { useFHEContext } from '../context/FHEContext'
 
@@ -30,7 +30,7 @@ export interface UseUnwrapParams {
 export interface UseUnwrapReturn {
   /** Function to unwrap tokens - takes amount in human-readable format and encrypts internally */
   unwrap: (amount: string) => Promise<void>
-  /** Whether the unwrap operation is in progress */
+  /** Whether the unwrap operation is in progress (including encryption) */
   isLoading: boolean
   /** Whether the unwrap operation succeeded */
   isSuccess: boolean
@@ -38,6 +38,8 @@ export interface UseUnwrapReturn {
   error: string | null
   /** Transaction hash */
   txHash: Hash | undefined
+  /** Whether user can unwrap (wallet connected and FHE ready) */
+  canUnwrap: boolean
   /** Reset the hook state */
   reset: () => void
   /** Whether FHE is ready for encryption */
@@ -68,8 +70,11 @@ export interface UseUnwrapReturn {
  */
 export function useUnwrap(params: UseUnwrapParams = {}): UseUnwrapReturn {
   const { tokenAddress, onSuccess } = params
-  const { address: userAddress } = useAccount()
-  const { isFHEReady, fheInstance, signer } = useFHEContext()
+  const { address: userAddress, isConnected } = useAccount()
+  const { isFHEReady, fheInstance } = useFHEContext()
+
+  const [isEncrypting, setIsEncrypting] = useState(false)
+  const [preTxError, setPreTxError] = useState<string | null>(null)
 
   // Store onSuccess callback in ref to avoid re-renders
   const onSuccessRef = useRef(onSuccess)
@@ -102,24 +107,43 @@ export function useUnwrap(params: UseUnwrapParams = {}): UseUnwrapReturn {
    */
   const unwrap = useCallback(
     async (amount: string) => {
+      setPreTxError(null)
+
       // Validation
-      if (!userAddress) {
-        throw new Error('Wallet not connected')
-      }
-      if (!amount || amount === '0') {
-        throw new Error('Invalid amount')
-      }
-      if (!tokenAddress) {
-        throw new Error('Token address not provided')
-      }
-      if (!isFHEReady || !fheInstance || !signer) {
-        throw new Error('FHE not ready. Please wait for initialization.')
+      if (!isConnected) {
+        const error = 'Please connect your wallet first'
+        setPreTxError(error)
+        throw new Error(error)
       }
 
-      // Reset previous state
-      resetWrite()
+      if (!userAddress) {
+        const error = 'No wallet address found'
+        setPreTxError(error)
+        throw new Error(error)
+      }
+
+      if (!tokenAddress) {
+        const error = 'Token address not provided'
+        setPreTxError(error)
+        throw new Error(error)
+      }
+
+      if (!isFHEReady || !fheInstance) {
+        const error = 'FHE system is not ready. Please wait for initialization.'
+        setPreTxError(error)
+        throw new Error(error)
+      }
+
+      if (!amount || amount === '0') {
+        const error = 'Please enter a valid amount'
+        setPreTxError(error)
+        throw new Error(error)
+      }
 
       try {
+        setIsEncrypting(true)
+        resetWrite()
+
         // Import encryption function from core
         const { encryptUint64, parseTokenAmount } = await import(
           '@shieldkit/core'
@@ -128,7 +152,12 @@ export function useUnwrap(params: UseUnwrapParams = {}): UseUnwrapReturn {
         // Convert to smallest unit (default 6 decimals for USD tokens)
         const amountWei = parseTokenAmount(amount, 6)
 
+        if (amountWei <= 0n) {
+          throw new Error('Amount must be greater than 0')
+        }
+
         // Encrypt the amount using FHE
+        console.log('Encrypting amount:', amountWei)
         const { handle, proof } = await encryptUint64(
           fheInstance,
           tokenAddress,
@@ -136,32 +165,59 @@ export function useUnwrap(params: UseUnwrapParams = {}): UseUnwrapReturn {
           amountWei,
         )
 
-        // Convert to hex strings
-        const encryptedAmount = `0x${Buffer.from(handle).toString('hex')}` as `0x${string}`
-        const inputProof = `0x${Buffer.from(proof).toString('hex')}` as `0x${string}`
-
         // Call unwrap function on the confidential token contract
         writeContract({
           address: tokenAddress,
           abi: ConfidentialERC20WrapperABI,
           functionName: 'unwrap',
-          args: [userAddress, userAddress, encryptedAmount, inputProof],
+          args: [userAddress, userAddress, toHex(handle), toHex(proof)],
         })
       } catch (error) {
+        const message =
+          error instanceof Error ? error.message : 'Unwrap failed'
+        setPreTxError(message)
         console.error('Unwrap error:', error)
         throw error
+      } finally {
+        setIsEncrypting(false)
       }
     },
     [
+      isConnected,
       userAddress,
       tokenAddress,
       isFHEReady,
       fheInstance,
-      signer,
       resetWrite,
       writeContract,
     ],
   )
+
+  // Parse contract errors for user-friendly messages
+  const parsedContractError = useMemo(() => {
+    const error = writeError || confirmError
+    if (!error) return null
+
+    const errorStr = error.toString()
+
+    if (errorStr.includes('InsufficientBalance')) {
+      return 'Insufficient balance to complete this unwrap'
+    }
+
+    if (errorStr.includes('rejected')) {
+      return 'Transaction was rejected by user'
+    }
+
+    if (errorStr.includes('insufficient funds')) {
+      return 'Insufficient funds to pay for gas fees'
+    }
+
+    if (errorStr.includes('InvalidProof')) {
+      return 'Invalid encryption proof. Please try again'
+    }
+
+    return 'Transaction failed. Please try again'
+  }, [writeError, confirmError])
 
   // Execute onSuccess callback when unwrap succeeds
   useEffect(() => {
@@ -170,16 +226,27 @@ export function useUnwrap(params: UseUnwrapParams = {}): UseUnwrapReturn {
     }
   }, [isSuccess])
 
-  // Parse error message
-  const error = writeError?.message || confirmError?.message || null
+  // Reset pre-transaction error when starting new transaction
+  useEffect(() => {
+    if (isWritePending || isConfirming) {
+      setPreTxError(null)
+    }
+  }, [isWritePending, isConfirming])
+
+  const isLoading = isEncrypting || isWritePending || isConfirming
+  const error = preTxError || parsedContractError
 
   return {
     unwrap,
-    isLoading: isWritePending || isConfirming,
+    isLoading,
     isSuccess,
     error,
     txHash,
-    reset: resetWrite,
+    canUnwrap: isConnected && isFHEReady && !isLoading,
+    reset: () => {
+      setPreTxError(null)
+      resetWrite()
+    },
     isFHEReady,
   }
 }

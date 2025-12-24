@@ -46,7 +46,7 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
 
   const tokenAddress = wrappedAddress || (SEPOLIA_TEST_TOKENS.wrapper as Address)
 
-  const { unwrap, isLoading, isSuccess, error, txHash, reset } = useUnwrap({
+  const { unwrap, isLoading, isSuccess, error, txHash } = useUnwrap({
     tokenAddress,
     onSuccess: () => {
       console.log('Unwrap request successful!')
@@ -200,6 +200,11 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
               <Loader2 className="w-4 h-4 animate-spin" />
               Requesting...
             </>
+          ) : displayBalance === null ? (
+            <>
+              <Lock className="w-4 h-4" />
+              Decrypt Balance First
+            </>
           ) : (
             <>
               <Download className="w-4 h-4" />
@@ -231,12 +236,6 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
                 <p className="text-sm font-medium text-red-600 dark:text-red-400">
                   Error: {formatErrorMessage(error)}
                 </p>
-                <button
-                  onClick={reset}
-                  className="text-xs text-red-600 dark:text-red-400 hover:underline mt-1"
-                >
-                  Try again
-                </button>
               </div>
             </div>
           </div>

@@ -40,7 +40,7 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
 
   const tokenAddress = wrappedAddress || (SEPOLIA_TEST_TOKENS.wrapper as Address)
 
-  const { transfer, isLoading, isSuccess, error, txHash, reset } = useTransfer({
+  const { transfer, isLoading, isSuccess, error, txHash } = useTransfer({
     tokenAddress,
     decimals: selectedTokenConfig?.decimals || 6,
     onSuccess: () => {
@@ -204,6 +204,11 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
             <Loader2 className="w-4 h-4 animate-spin" />
             Sending...
           </>
+        ) : displayBalance === null ? (
+          <>
+            <Lock className="w-4 h-4" />
+            Decrypt Balance First
+          </>
         ) : (
           <>
             <Send className="w-4 h-4" />
@@ -235,12 +240,6 @@ export default function TransferPanel({ tokens }: TransferPanelProps) {
               <p className="text-sm font-medium text-red-600 dark:text-red-400">
                 Error: {formatErrorMessage(error)}
               </p>
-              <button
-                onClick={reset}
-                className="text-xs text-red-600 dark:text-red-400 hover:underline mt-1"
-              >
-                Try again
-              </button>
             </div>
           </div>
         </div>

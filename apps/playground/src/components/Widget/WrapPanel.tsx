@@ -256,12 +256,6 @@ export default function WrapPanel({ tokens, getBalance, onWrapSuccess }: WrapPan
               <p className="text-sm font-medium text-red-600 dark:text-red-400">
                 Error: {formatErrorMessage(deployTx.error || approveTx.error || wrapTx.error)}
               </p>
-              <button
-                onClick={reset}
-                className="text-xs text-red-600 dark:text-red-400 hover:underline mt-1"
-              >
-                Try again
-              </button>
             </div>
           </div>
         </div>

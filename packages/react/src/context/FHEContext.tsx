@@ -23,11 +23,9 @@ declare global {
     ethereum?: any
   }
 }
-import { useAccount, useConfig } from 'wagmi'
-import { Signer } from 'ethers'
+
 import { initializeFHE, createFHEInstance } from '@shieldkit/core'
 import type { FhevmInstance } from '@shieldkit/core'
-import { getEthersSigner } from '../utils/client-to-signer'
 
 // Global singleton state to prevent multiple FHE initializations
 let globalFheInstance: FhevmInstance | null = null
@@ -107,8 +105,6 @@ export interface FHEContextType {
   fheError: string | null
   /** Retry FHE initialization */
   retryFHE: () => void
-  /** Ethers.js signer (null if wallet not connected) */
-  signer: Signer | null
 }
 
 /**
@@ -137,10 +133,6 @@ export interface FHEProviderProps {
  * ```
  */
 export function FHEProvider({ children }: FHEProviderProps) {
-  const { address } = useAccount()
-  const config = useConfig()
-
-  const [signer, setSigner] = useState<Signer | null>(null)
   const [fheError, setFheError] = useState<string | null>(globalError)
   const [isInitialized, setIsInitialized] = useState<boolean>(
     globalIsInitialized,
@@ -215,37 +207,11 @@ export function FHEProvider({ children }: FHEProviderProps) {
     })
   }, [])
 
-  // Initialize signer when wallet is connected
-  useEffect(() => {
-    const initSigner = async () => {
-      if (!address) {
-        setSigner(null)
-        return
-      }
-
-      try {
-        const s = await getEthersSigner(config)
-        if (!s) {
-          console.warn('Failed to initialize signer')
-          setSigner(null)
-          return
-        }
-        setSigner(s)
-      } catch (error) {
-        console.error('Error initializing signer:', error)
-        setSigner(null)
-      }
-    }
-
-    initSigner()
-  }, [config, address])
-
   const contextValue: FHEContextType = {
     isFHEReady: isInitialized && !!globalFheInstance && !fheError,
     fheInstance: globalFheInstance,
     fheError,
     retryFHE,
-    signer,
   }
 
   return (
