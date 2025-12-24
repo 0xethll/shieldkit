@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useUnwrap, useUnwrapQueue, useConfidentialBalanceFor } from '@shieldkit/react'
+import { useUnwrap, useUnwrapQueue, useConfidentialBalanceFor, useFHEContext } from '@shieldkit/react'
 import { useConfidentialBalance } from '../../contexts/ConfidentialBalanceContext'
 import { SEPOLIA_TEST_TOKENS } from '../../config'
 import { env } from '../../lib/env'
@@ -17,19 +17,25 @@ import type { Address } from 'viem'
 import type { TokenConfig } from '../../config/scenarios'
 import TokenSelector from './TokenSelector'
 import QueueItem from './QueueItem'
+import QueueItemSkeleton from './QueueItemSkeleton'
 import { getTokenPrefix, formatErrorMessage } from './utils'
+import { useDecryptedAmounts } from '../../hooks/useDecryptedAmounts'
+import { AnimatePresence } from 'framer-motion'
 
 interface UnwrapPanelProps {
   tokens: TokenConfig[]
+  getBalance?: (token: string) => string | null
   onUnwrapSuccess?: (token: string) => void
 }
 
-export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProps) {
+export default function UnwrapPanel({ tokens, getBalance, onUnwrapSuccess }: UnwrapPanelProps) {
   const { getDecryptedBalance, cacheDecryptedBalance, clearBalance } = useConfidentialBalance()
+  const { fheInstance } = useFHEContext()
 
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
   const [isQueueExpanded, setIsQueueExpanded] = useState(true)
+  const [pendingFinalizeTx, setPendingFinalizeTx] = useState<string | null>(null)
 
   // Get selected token config
   const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
@@ -58,13 +64,20 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
       clearBalance(erc20Address)
 
       setAmount('')
+      // Refetch queue after successful unwrap request
+      refetch()
     },
   })
 
-  const { unwrapRequests, isLoading: isQueueLoading } = useUnwrapQueue({
+  const { unwrapRequests, isLoading: isQueueLoading, refetch } = useUnwrapQueue({
     tokenAddress,
     graphqlUrl: env.graphqlUrl,
+    enableAutoRefetch: true,
+    refetchInterval: 15000, // Auto-refetch every 15s
   })
+
+  // Asynchronously decrypt amounts for pending unwrap requests
+  const decryptedCache = useDecryptedAmounts(unwrapRequests || [], fheInstance)
 
   // Cache decrypted balance when it becomes available
   useEffect(() => {
@@ -248,7 +261,7 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
       </div>
 
       {/* Pending Unwraps Queue */}
-      <div className="space-y-4 md:border-l md:border-border/50 ">
+      <div className="space-y-4 md:border-l md:border-border/50">
         {/* Header - clickable on mobile */}
         <button
           onClick={() => setIsQueueExpanded(!isQueueExpanded)}
@@ -271,17 +284,46 @@ export default function UnwrapPanel({ tokens, onUnwrapSuccess }: UnwrapPanelProp
           </div>
         </button>
 
+        {/* ERC20 Balance Display */}
+        <div className="px-3 py-2 bg-secondary/30 rounded-dynamic-lg border border-border/50">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-muted-foreground">
+              {selectedToken} Balance
+            </span>
+            <span className="text-xs font-semibold font-mono">
+              {getBalance?.(selectedToken) || '--'}
+            </span>
+          </div>
+        </div>
+
         {/* Queue Content - collapsible on mobile, always visible on desktop */}
         <div className={`${isQueueExpanded ? 'block' : 'hidden'} md:block`}>
-          {isQueueLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          {isQueueLoading && (!unwrapRequests || unwrapRequests.length === 0) ? (
+            <div className="space-y-3">
+              <QueueItemSkeleton />
+              <QueueItemSkeleton />
+              <QueueItemSkeleton />
             </div>
           ) : unwrapRequests && unwrapRequests.length > 0 ? (
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-              {unwrapRequests.map((item, index) => (
-                <QueueItem key={index} item={item} onFinalizeSuccess={onUnwrapSuccess} />
-              ))}
+              <AnimatePresence mode="popLayout">
+                {unwrapRequests.map((item) => (
+                  <QueueItem
+                    key={item.id || item.burntAmount}
+                    item={item}
+                    decryptionResult={decryptedCache.get(item.burntAmount)}
+                    onFinalizeSuccess={(token) => {
+                      // Update ERC20 balance after finalization
+                      onUnwrapSuccess?.(selectedToken)
+                      // Refetch the queue after finalization
+                      setTimeout(() => refetch(), 1500)
+                    }}
+                    isFinalizing={false}
+                    pendingTx={pendingFinalizeTx}
+                    decimals={selectedTokenConfig?.decimals || 6}
+                  />
+                ))}
+              </AnimatePresence>
             </div>
           ) : (
             <div className="py-8 text-center">

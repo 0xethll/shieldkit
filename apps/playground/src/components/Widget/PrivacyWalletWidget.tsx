@@ -115,6 +115,7 @@ export default function PrivacyWalletWidget() {
           {activeTab === 'unwrap' && (
             <UnwrapPanel
               tokens={customTokens}
+              getBalance={getBalance}
               onUnwrapSuccess={updateBalance}
             />
           )}
