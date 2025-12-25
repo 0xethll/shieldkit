@@ -17,8 +17,8 @@ export default function DeFiAppMock() {
               <Shield className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Privacy DeFi</h1>
-              <p className="text-xs text-muted-foreground">Full-featured privacy protocol</p>
+              <h1 className="text-xl font-bold">Confidential DeFi</h1>
+              <p className="text-xs text-muted-foreground">Full-featured confidential protocol</p>
             </div>
           </div>
 
@@ -48,10 +48,10 @@ export default function DeFiAppMock() {
           {/* Hero */}
           <div className="text-center space-y-3 py-6">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Complete Privacy DeFi Experience
+              Complete Confidential DeFi Experience
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Wrap, transfer, and unwrap tokens with full confidentiality using FHE encryption
+              Wrap, transfer, and unwrap tokens with encrypted balances using FHE
             </p>
           </div>
 
@@ -81,9 +81,9 @@ export default function DeFiAppMock() {
           <div className="p-6 bg-secondary/30 backdrop-blur-sm border border-border rounded-2xl space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold mb-1">Privacy Wallet</h3>
+                <h3 className="text-lg font-bold mb-1">Confidential Balance Widget</h3>
                 <p className="text-sm text-muted-foreground">
-                  Access all privacy features in one place
+                  Access all confidential features in one place
                 </p>
               </div>
               <div className="p-3 bg-primary/10 rounded-xl">
@@ -97,7 +97,7 @@ export default function DeFiAppMock() {
                 className="w-full px-6 py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-xl font-semibold transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 <Wallet className="w-5 h-5" />
-                Open Privacy Wallet
+                Open Confidential Balance Widget
               </button>
             ) : (
               <button

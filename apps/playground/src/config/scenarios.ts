@@ -58,8 +58,8 @@ export const TOKENS: TokenConfig[] = [
 export const scenarios: Record<ScenarioId, ScenarioConfig> = {
   lending: {
     id: 'lending',
-    name: 'Privacy Lending',
-    description: 'Private asset deposit for lending protocols',
+    name: 'Confidential Lending',
+    description: 'Confidential asset deposit for lending protocols',
     defaultTab: 'wrap',
     features: {
       wrap: true,
@@ -67,15 +67,15 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       unwrap: true,
     },
     mockApp: {
-      title: 'Privacy Lending Platform',
-      description: 'Deposit your assets privately and earn yields',
+      title: 'Confidential Lending Platform',
+      description: 'Deposit your assets confidentially and earn yields',
       type: 'lending',
     },
   },
   payment: {
     id: 'payment',
-    name: 'P2P Payment',
-    description: 'Private peer-to-peer transfers',
+    name: 'Confidential Payment',
+    description: 'Confidential peer-to-peer transfers',
     defaultTab: 'transfer',
     features: {
       wrap: true,
@@ -83,15 +83,15 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       unwrap: true,
     },
     mockApp: {
-      title: 'Privacy Payment App',
-      description: 'Send payments without revealing amounts',
+      title: 'Confidential Payment App',
+      description: 'Send payments with encrypted amounts',
       type: 'payment',
     },
   },
   defi: {
     id: 'defi',
-    name: 'DeFi',
-    description: 'Full-featured privacy wallet demo',
+    name: 'Confidential DeFi',
+    description: 'Full-featured confidential balance demo',
     defaultTab: 'wrap',
     features: {
       wrap: true,
@@ -99,8 +99,8 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       unwrap: true,
     },
     mockApp: {
-      title: 'DeFi Application',
-      description: 'Complete privacy-enabled DeFi experience',
+      title: 'Confidential DeFi Application',
+      description: 'Complete confidential balance experience',
       type: 'defi',
     },
   },

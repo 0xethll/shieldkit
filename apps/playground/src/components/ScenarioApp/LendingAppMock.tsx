@@ -17,7 +17,7 @@ export default function LendingAppMock() {
               <Shield className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Privacy Lending</h1>
+              <h1 className="text-xl font-bold">Confidential Lending</h1>
               <p className="text-xs text-muted-foreground">Confidential DeFi Protocol</p>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function LendingAppMock() {
                 className="w-full px-6 py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-xl font-semibold transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 <Shield className="w-5 h-5" />
-                Connect Privacy Wallet
+                Open Confidential Balance Widget
               </button>
             ) : (
               <button
@@ -109,7 +109,7 @@ export default function LendingAppMock() {
           {/* Info */}
           <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
             <p className="text-sm text-blue-600 dark:text-blue-400">
-              ℹ️ This is a demo interface. The Privacy Wallet widget will appear when you click the button above.
+              ℹ️ This is a demo interface. The Confidential Balance widget will appear when you click the button above.
             </p>
           </div>
         </div>

@@ -17,8 +17,8 @@ export default function PaymentAppMock() {
               <Send className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Privacy Pay</h1>
-              <p className="text-xs text-muted-foreground">Send payments privately</p>
+              <h1 className="text-xl font-bold">Confidential Pay</h1>
+              <p className="text-xs text-muted-foreground">Send payments with encrypted amounts</p>
             </div>
           </div>
 
@@ -48,10 +48,10 @@ export default function PaymentAppMock() {
           {/* Hero Section */}
           <div className="text-center space-y-3 py-8">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
-              Private Payments Made Easy
+              Confidential Payments Made Easy
             </h2>
             <p className="text-muted-foreground">
-              Send money without revealing amounts to anyone
+              Send money with encrypted amounts using FHE
             </p>
           </div>
 
@@ -108,7 +108,7 @@ export default function PaymentAppMock() {
                 className="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-semibold transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 <Send className="w-5 h-5" />
-                Open Privacy Wallet
+                Open Confidential Balance Widget
               </button>
             ) : (
               <button
@@ -134,7 +134,7 @@ export default function PaymentAppMock() {
           {/* Info */}
           <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
             <p className="text-sm text-green-600 dark:text-green-400">
-              ℹ️ Click "Open Privacy Wallet" to access transfer features with encrypted amounts.
+              ℹ️ Click "Open Confidential Balance Widget" to access transfer features with encrypted amounts.
             </p>
           </div>
         </div>

@@ -43,7 +43,7 @@ export default function PrivacyWalletWidget() {
               <div className="p-2 rounded-dynamic-lg bg-primary/10">
                 <Wallet className="w-5 h-5 text-primary" />
               </div>
-              <h2 className="text-lg font-bold">Privacy Wallet</h2>
+              <h2 className="text-lg font-bold">Confidential Balance</h2>
             </div>
             <div className="flex items-center gap-1.5 px-2.5 py-1 bg-secondary/50 rounded-dynamic-full text-xs font-medium">
               <Network className="w-3 h-3 text-green-500" />

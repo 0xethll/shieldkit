@@ -26,7 +26,7 @@
     }
   },
   "scripts": {
-    "dev": "bun run --filter='web' dev",
+    "dev": "bun run --filter='playground' dev",
     "build": "bun run build:packages && bun run build:apps",
     "build:packages": "bun run --filter='./packages/*' build",
     "build:apps": "bun run --filter='./apps/*' build",

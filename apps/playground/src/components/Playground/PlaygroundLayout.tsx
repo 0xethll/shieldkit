@@ -10,10 +10,10 @@ export default function PlaygroundLayout() {
       {/* Header */}
       <header className="border-b border-border px-6 py-4 flex-shrink-0">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Privacy Wallet Playground
+          ShieldKit Playground
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Interactive demo for @shieldkit/react
+          Interactive demo for @shieldkit/react confidential balance features
         </p>
       </header>
 
