@@ -101,7 +101,7 @@ export default function PrivacyWalletWidget() {
         )}
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
           {activeTab === 'wrap' && (
             <WrapPanel
               tokens={customTokens}

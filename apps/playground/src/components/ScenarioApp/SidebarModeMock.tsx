@@ -37,7 +37,7 @@ export default function SidebarModeMock() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto scrollbar-thin p-8">
           <div className="max-w-4xl mx-auto space-y-8">
             {/* Hero */}
             <div className="text-center space-y-3 py-6">
