@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.62.7",
     "alchemy-sdk": "^3.6.5",
+    "connectkit": "^1.9.1",
     "ethers": "catalog:",
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",

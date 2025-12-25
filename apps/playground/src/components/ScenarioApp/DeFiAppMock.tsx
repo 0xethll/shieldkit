@@ -1,11 +1,11 @@
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
-import { useAccount, useConnect } from 'wagmi'
-import { Wallet, Lock, Send, Download, Shield } from 'lucide-react'
+import { useAccount } from 'wagmi'
+import { ConnectKitButton } from 'connectkit'
+import { Lock, Send, Download, Shield, Wallet } from 'lucide-react'
 
 export default function DeFiAppMock() {
   const { openWidget } = usePlaygroundConfig()
-  const { address, isConnected } = useAccount()
-  const { connect, connectors } = useConnect()
+  const { isConnected } = useAccount()
 
   return (
     <div className="w-full h-full flex flex-col bg-gradient-to-br from-background via-background to-purple-500/5">
@@ -23,22 +23,7 @@ export default function DeFiAppMock() {
           </div>
 
           {/* Wallet Connection */}
-          {!isConnected ? (
-            <button
-              onClick={() => connectors[0] && connect({ connector: connectors[0] })}
-              className="px-4 py-2 bg-secondary hover:bg-accent border border-border rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-            >
-              <Wallet className="w-4 h-4" />
-              Connect Wallet
-            </button>
-          ) : (
-            <div className="flex items-center gap-2 px-3 py-2 bg-secondary/50 rounded-lg">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span className="text-sm font-mono">
-                {address?.slice(0, 6)}...{address?.slice(-4)}
-              </span>
-            </div>
-          )}
+          <ConnectKitButton />
         </div>
       </header>
 

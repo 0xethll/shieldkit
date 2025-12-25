@@ -91,7 +91,7 @@ export default function WalletModal() {
                   {/* Close Button */}
                   <button
                     onClick={closeWidget}
-                    className="absolute top-4 right-4 z-10 p-2 hover:bg-secondary transition-colors"
+                    className="absolute top-1 right-1 z-10 p-2 hover:bg-secondary transition-colors"
                     style={{
                       backgroundColor: 'color-mix(in srgb, var(--color-secondary) 80%, transparent)',
                       border: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)',
