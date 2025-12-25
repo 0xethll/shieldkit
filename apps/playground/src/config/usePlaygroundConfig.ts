@@ -2,6 +2,102 @@ import { create } from 'zustand'
 import { scenarios, defaultScenario, TOKENS, type ScenarioId, type ScenarioConfig, type TokenConfig } from './scenarios'
 import { defaultTheme, type ThemeConfig, type ThemeType, type AccentColor, type RadiusSize } from './themes'
 
+// Helper function to generate dialog mode code
+function generateDialogCode(
+  customTokens: TokenConfig[],
+  defaultTab: string,
+  features: { wrap: boolean; transfer: boolean; unwrap: boolean },
+  theme: ThemeConfig
+): string {
+  const imports = `import { useState } from 'react'
+import { PrivacyWalletWidget } from '@shieldkit/react'
+import { Dialog } from '@/components/ui/dialog' // Your dialog component`
+
+  const tokenSymbols = customTokens.map(t => t.symbol)
+  const tokensArray = tokenSymbols.length > 0 ? `['${tokenSymbols.join("', '")}']` : '[]'
+
+  const componentCode = `function MyApp() {
+  const [showWidget, setShowWidget] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setShowWidget(true)}>
+        Open Confidential Balance
+      </button>
+
+      {showWidget && (
+        <Dialog onClose={() => setShowWidget(false)}>
+          <PrivacyWalletWidget
+            tokens={${tokensArray}}
+            defaultTab="${defaultTab}"
+            features={{
+              wrap: ${features.wrap},
+              transfer: ${features.transfer},
+              unwrap: ${features.unwrap},
+            }}
+          />
+        </Dialog>
+      )}
+    </>
+  )
+}`
+
+  return `${imports}\n\n${componentCode}`
+}
+
+// Helper function to generate sidebar mode code
+function generateSidebarCode(
+  customTokens: TokenConfig[],
+  defaultTab: string,
+  features: { wrap: boolean; transfer: boolean; unwrap: boolean },
+  theme: ThemeConfig
+): string {
+  const imports = `import { useState } from 'react'
+import { PrivacyWalletWidget } from '@shieldkit/react'`
+
+  const tokenSymbols = customTokens.map(t => t.symbol)
+  const tokensArray = tokenSymbols.length > 0 ? `['${tokenSymbols.join("', '")}']` : '[]'
+
+  const componentCode = `function MyApp() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+
+  return (
+    <div className="flex h-screen">
+      {/* Main content */}
+      <main className={\`flex-1 transition-all \${isSidebarOpen ? 'mr-96' : 'mr-0'}\`}>
+        {/* Your app content */}
+      </main>
+
+      {/* Sidebar Widget */}
+      <aside className={
+        \`fixed right-0 top-0 h-full w-96 bg-background border-l
+         transform transition-transform
+         \${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}\`
+      }>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="absolute -left-10 top-20"
+        >
+          {isSidebarOpen ? '→' : '←'}
+        </button>
+
+        <PrivacyWalletWidget
+          tokens={${tokensArray}}
+          defaultTab="${defaultTab}"
+          features={{
+            wrap: ${features.wrap},
+            transfer: ${features.transfer},
+            unwrap: ${features.unwrap},
+          }}
+        />
+      </aside>
+    </div>
+  )
+}`
+
+  return `${imports}\n\n${componentCode}`
+}
+
 export interface PlaygroundState {
   // Scenario configuration
   currentScenario: ScenarioConfig
@@ -90,31 +186,13 @@ export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
 
   generateCode: () => {
     const state = get()
-    const { customTokens, defaultTab, features, theme } = state
+    const { currentScenario, customTokens, defaultTab, features, theme } = state
 
-    // Generate imports
-    const imports = `import { PrivacyWallet } from '@shieldkit/react'\n`
-
-    // Generate component code - use token symbols for cleaner code
-    const tokenSymbols = customTokens.map(t => t.symbol)
-    const tokensArray = tokenSymbols.length > 0 ? `['${tokenSymbols.join("', '")}']` : '[]'
-    const featuresObj = `{
-  wrap: ${features.wrap},
-  transfer: ${features.transfer},
-  unwrap: ${features.unwrap},
-}`
-
-    const componentCode = `<PrivacyWallet
-  tokens={${tokensArray}}
-  defaultTab="${defaultTab}"
-  features={${featuresObj}}
-  theme={{
-    type: "${theme.type}",
-    accent: "${theme.accent}",
-    radius: "${theme.radius}"
-  }}
-/>`
-
-    return `${imports}\n${componentCode}`
+    // Generate different code based on integration mode
+    if (currentScenario.integrationMode === 'sidebar') {
+      return generateSidebarCode(customTokens, defaultTab, features, theme)
+    } else {
+      return generateDialogCode(customTokens, defaultTab, features, theme)
+    }
   },
 }))

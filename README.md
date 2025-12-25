@@ -66,7 +66,7 @@ This is a **Bun workspaces** monorepo containing packages and applications:
 
 ### 🚀 Applications (`/apps`)
 
-- **[playground](./apps/playground)** - Interactive demo showcasing configurable confidential balance widget
+- **[playground](./apps/playground)** - Interactive demo showcasing Dialog and Sidebar integration modes
 - **[web](./apps/web)** - z-payment
 
 ### 🔧 Additional Directories
@@ -278,9 +278,9 @@ function ConfidentialBalance() {
 ### Playground App
 
 See the [Playground README](./apps/playground/README.md) for an interactive demo with:
-- 3 real-world scenarios (Lending, Payment, DeFi)
-- Configurable widget
-- Live code preview
+- 2 integration modes (Dialog and Sidebar patterns)
+- Configurable widget features
+- Live code preview for each mode
 
 ### Basic Usage Examples
 

@@ -35,15 +35,15 @@ export default function PrivacyWalletWidget() {
   }, [activeTab, tabs])
 
   return (
-      <div className="w-full">
+      <div className="w-full h-full flex flex-col">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-border/50">
+        <div className="flex-shrink-0 px-6 pt-5 border-b border-border/50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-dynamic-lg bg-primary/10">
                 <Wallet className="w-5 h-5 text-primary" />
               </div>
-              <h2 className="text-lg font-bold">Confidential Balance</h2>
+              <h2 className="text-lg font-bold">Confidential Widget</h2>
             </div>
             <div className="flex items-center gap-1.5 px-2.5 py-1 bg-secondary/50 rounded-dynamic-full text-xs font-medium">
               <Network className="w-3 h-3 text-green-500" />
@@ -73,7 +73,7 @@ export default function PrivacyWalletWidget() {
 
         {/* Tabs */}
         {tabs.length > 0 && (
-          <div className="px-6 pt-4">
+          <div className="flex-shrink-0 px-6 pt-4">
             <div className="flex gap-1 p-1 bg-secondary/50 rounded-dynamic-lg">
               {tabs.map((tab) => (
                 <button
@@ -101,7 +101,7 @@ export default function PrivacyWalletWidget() {
         )}
 
         {/* Content */}
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'wrap' && (
             <WrapPanel
               tokens={customTokens}

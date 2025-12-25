@@ -1,44 +1,42 @@
 # ShieldKit Playground
 
-Interactive playground demonstrating configurable confidential balance features across different DeFi scenarios.
+Interactive playground demonstrating different integration modes for the confidential balance widget.
 
 ## Overview
 
-The ShieldKit Playground is a full-featured interactive demo that showcases how to integrate the `@shieldkit/react` confidential balance widget into different types of dApps. Unlike simple examples, this playground provides:
+The ShieldKit Playground is a full-featured interactive demo that showcases how to integrate the `@shieldkit/react` confidential widget into your dApp. Unlike simple examples, this playground provides:
 
-- **3 Real-world Scenarios**: Lending, Payment, and DeFi applications
+- **2 Integration Modes**: Dialog (popup) and Sidebar (embedded) patterns
 - **Configurable Widget**: Customize features, tokens, and behavior in real-time
 - **Live Code Preview**: See the exact code needed for your integration
-- **Mock dApp Interfaces**: Experience the widget in context
+- **Interactive Examples**: Experience different integration patterns in action
 
 ## Features
 
-### Scenario-Based Demos
+### Integration Modes
 
-1. **Confidential Lending** - Asset deposit with encrypted balances
-   - Features: Wrap, Unwrap (no transfers)
-   - Use case: Private collateral deposits
+1. **Dialog Mode** - Widget as a popup/modal
+   - Best for: Auxiliary features, occasional access
+   - Pattern: Click button → Opens dialog → Perform operations
+   - Example: Adding confidential balance to existing DeFi dashboard
 
-2. **Confidential Payment** - P2P transfers with hidden amounts
-   - Features: Wrap, Transfer, Unwrap
-   - Use case: Private salary payments, gifts
-
-3. **Confidential DeFi** - Full-featured privacy protocol
-   - Features: All operations enabled
-   - Use case: Complete privacy layer integration
+2. **Sidebar Mode** - Widget as a persistent sidebar
+   - Best for: Core features, frequent access
+   - Pattern: Always visible, collapsible sidebar
+   - Example: Privacy-first wallet applications
 
 ### Widget Customization
 
 - Toggle features (Wrap/Transfer/Unwrap)
 - Select supported tokens
-- Configure default behavior
+- Configure default tab
 - Preview code changes in real-time
 
-### Interactive Components
+### Interactive Layout
 
-- **Left Panel**: Configuration controls
-- **Right Panel**: Mock dApp with embedded widget
-- **Bottom Panel**: Generated code display
+- **Left Panel**: Mode selection and widget configuration
+- **Right Panel**: Live demo of selected integration mode
+- **Bottom Panel**: Generated integration code
 
 ## Quick Start
 
@@ -72,23 +70,24 @@ bun run build
 
 ## Usage
 
-1. **Select a Scenario**
-   - Choose from Lending, Payment, or DeFi scenarios
-   - Each demonstrates different use cases
+1. **Select Integration Mode**
+   - Choose between Dialog Mode or Sidebar Mode
+   - See how each pattern works in a real interface
 
 2. **Configure the Widget**
-   - Enable/disable features using toggles
+   - Enable/disable features (Wrap/Transfer/Unwrap)
    - Select which tokens to support
    - Choose default starting tab
 
 3. **Test the Integration**
-   - Connect your wallet
-   - Click "Open Confidential Balance Widget" in the mock dApp
+   - Connect your wallet on Sepolia testnet
+   - Interact with the widget in the selected mode
    - Try wrap, transfer, and unwrap operations
 
 4. **Copy the Code**
-   - View generated code in the bottom panel
-   - Copy integration code for your own project
+   - Expand the code panel at the bottom
+   - View mode-specific integration code
+   - Copy and paste into your project
 
 ## Project Structure
 
@@ -97,22 +96,22 @@ src/
 ├── components/
 │   ├── Playground/
 │   │   ├── PlaygroundLayout.tsx       # Main layout with resizable panels
-│   │   ├── ConfigurationPanel.tsx     # Left panel: scenario & widget config
-│   │   ├── PreviewArea.tsx            # Right panel: mock dApp display
+│   │   ├── ConfigurationPanel.tsx     # Left panel: mode & widget config
+│   │   ├── PreviewArea.tsx            # Right panel: integration demo
 │   │   └── CodeDisplay.tsx            # Bottom panel: code preview
 │   ├── Widget/
-│   │   ├── PrivacyWalletWidget.tsx    # Main confidential balance widget
+│   │   ├── PrivacyWalletWidget.tsx    # Main confidential widget
 │   │   ├── WrapPanel.tsx              # Wrap tokens UI
 │   │   ├── TransferPanel.tsx          # Transfer UI
 │   │   └── UnwrapPanel.tsx            # Unwrap UI with queue
 │   ├── ScenarioApp/
-│   │   ├── LendingAppMock.tsx         # Mock lending dApp
-│   │   ├── PaymentAppMock.tsx         # Mock payment dApp
-│   │   └── DeFiAppMock.tsx            # Mock DeFi dApp
+│   │   ├── DialogModeMock.tsx         # Dialog integration demo
+│   │   ├── SidebarModeMock.tsx        # Sidebar integration demo
+│   │   └── ScenarioApp.tsx            # Mode router
 │   └── ...
 ├── config/
-│   ├── scenarios.ts                   # Scenario definitions & configs
-│   └── usePlaygroundConfig.tsx        # Global config state
+│   ├── scenarios.ts                   # Integration mode configs
+│   └── usePlaygroundConfig.ts         # Global config state
 ├── hooks/
 │   └── useTokenBalances.ts            # Token balance management
 └── App.tsx                            # Entry point with providers
@@ -120,29 +119,31 @@ src/
 
 ## Key Concepts
 
-### Scenario System
+### Integration Modes
 
-Each scenario defines:
-- **Default Tab**: Which feature to show first (wrap/transfer/unwrap)
-- **Enabled Features**: Which operations are available
-- **Mock App**: Custom dApp interface demonstrating the use case
+Each mode demonstrates a different UI pattern:
+
+**Dialog Mode:**
+- Widget opens as a modal/popup when triggered
+- Ideal for supplementary privacy features
+- User clicks button → Dialog appears → Complete operations → Close
+
+**Sidebar Mode:**
+- Widget embedded as a collapsible sidebar
+- Ideal when privacy is core to your app
+- Always accessible, doesn't interrupt main workflow
+- Can be collapsed to save screen space
 
 ```tsx
 // From scenarios.ts
 {
-  lending: {
-    id: 'lending',
-    name: 'Confidential Lending',
-    defaultTab: 'wrap',
-    features: {
-      wrap: true,
-      transfer: false,  // Disabled for this scenario
-      unwrap: true,
-    },
-    mockApp: {
-      title: 'Confidential Lending Platform',
-      description: 'Deposit your assets confidentially and earn yields',
-      type: 'lending',
+  dialog: {
+    id: 'dialog',
+    name: 'Dialog Mode',
+    integrationMode: 'dialog',
+    theme: {
+      title: 'My DeFi Dashboard',
+      description: 'Add confidential balance to your existing dApp',
     },
   }
 }
@@ -162,20 +163,16 @@ const { features, defaultTab, customTokens } = usePlaygroundConfig()
 // Opens to the configured default tab
 ```
 
-### Integration Pattern
+### Integration Patterns
 
-The playground demonstrates the recommended integration pattern:
+The playground demonstrates two integration approaches:
 
+**Dialog Pattern:**
 ```tsx
-// 1. Wrap your app with FHEProvider
-<FHEProvider>
-  <App />
-</FHEProvider>
+import { useState } from 'react'
+import { PrivacyWalletWidget } from '@shieldkit/react'
 
-// 2. Use the widget anywhere in your dApp
-import { PrivacyWalletWidget } from './components/Widget'
-
-function YourDApp() {
+function MyApp() {
   const [showWidget, setShowWidget] = useState(false)
 
   return (
@@ -185,11 +182,36 @@ function YourDApp() {
       </button>
 
       {showWidget && (
-        <Dialog>
+        <Dialog onClose={() => setShowWidget(false)}>
           <PrivacyWalletWidget />
         </Dialog>
       )}
     </>
+  )
+}
+```
+
+**Sidebar Pattern:**
+```tsx
+import { useState } from 'react'
+import { PrivacyWalletWidget } from '@shieldkit/react'
+
+function MyApp() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+
+  return (
+    <div className="flex h-screen">
+      <main className={`flex-1 ${isSidebarOpen ? 'mr-96' : ''}`}>
+        {/* Your app */}
+      </main>
+
+      <aside className={`fixed right-0 w-96 ${isSidebarOpen ? '' : 'hidden'}`}>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          Toggle
+        </button>
+        <PrivacyWalletWidget />
+      </aside>
+    </div>
   )
 }
 ```

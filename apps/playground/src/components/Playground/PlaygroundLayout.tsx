@@ -13,7 +13,7 @@ export default function PlaygroundLayout() {
           ShieldKit Playground
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Interactive demo for @shieldkit/react confidential balance features
+          Interactive demo for @shieldkit/react confidential features
         </p>
       </header>
 

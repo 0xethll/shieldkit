@@ -1,7 +1,8 @@
 import type { Address } from 'viem'
 
-export type ScenarioId = 'lending' | 'payment' | 'defi'
+export type ScenarioId = 'dialog' | 'sidebar'
 export type DefaultTab = 'wrap' | 'transfer' | 'unwrap'
+export type IntegrationMode = 'dialog' | 'sidebar'
 
 export interface TokenConfig {
   symbol: string
@@ -14,16 +15,17 @@ export interface ScenarioConfig {
   id: ScenarioId
   name: string
   description: string
+  integrationMode: IntegrationMode
   defaultTab: DefaultTab
   features: {
     wrap: boolean
     transfer: boolean
     unwrap: boolean
   }
-  mockApp: {
+  theme: {
     title: string
     description: string
-    type: 'lending' | 'payment' | 'defi'
+    primaryColor: string
   }
 }
 
@@ -56,54 +58,40 @@ export const TOKENS: TokenConfig[] = [
 ]
 
 export const scenarios: Record<ScenarioId, ScenarioConfig> = {
-  lending: {
-    id: 'lending',
-    name: 'Confidential Lending',
-    description: 'Confidential asset deposit for lending protocols',
-    defaultTab: 'wrap',
-    features: {
-      wrap: true,
-      transfer: false,
-      unwrap: true,
-    },
-    mockApp: {
-      title: 'Confidential Lending Platform',
-      description: 'Deposit your assets confidentially and earn yields',
-      type: 'lending',
-    },
-  },
-  payment: {
-    id: 'payment',
-    name: 'Confidential Payment',
-    description: 'Confidential peer-to-peer transfers',
-    defaultTab: 'transfer',
-    features: {
-      wrap: true,
-      transfer: true,
-      unwrap: true,
-    },
-    mockApp: {
-      title: 'Confidential Payment App',
-      description: 'Send payments with encrypted amounts',
-      type: 'payment',
-    },
-  },
-  defi: {
-    id: 'defi',
-    name: 'Confidential DeFi',
-    description: 'Full-featured confidential balance demo',
+  dialog: {
+    id: 'dialog',
+    name: 'Dialog Mode',
+    description: 'Widget as a popup - best for auxiliary features',
+    integrationMode: 'dialog',
     defaultTab: 'wrap',
     features: {
       wrap: true,
       transfer: true,
       unwrap: true,
     },
-    mockApp: {
-      title: 'Confidential DeFi Application',
-      description: 'Complete confidential balance experience',
-      type: 'defi',
+    theme: {
+      title: 'My DeFi Dashboard',
+      description: 'Add confidential balance to your existing dApp',
+      primaryColor: 'blue',
+    },
+  },
+  sidebar: {
+    id: 'sidebar',
+    name: 'Sidebar Mode',
+    description: 'Widget as a persistent sidebar - best for core features',
+    integrationMode: 'sidebar',
+    defaultTab: 'wrap',
+    features: {
+      wrap: true,
+      transfer: true,
+      unwrap: true,
+    },
+    theme: {
+      title: 'Confidential Wallet',
+      description: 'Privacy-first balance management',
+      primaryColor: 'purple',
     },
   },
 }
 
-export const defaultScenario: ScenarioConfig = scenarios.defi
+export const defaultScenario: ScenarioConfig = scenarios.dialog

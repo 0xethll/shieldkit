@@ -102,7 +102,7 @@ export default function WalletModal() {
                   </button>
 
                   {/* Widget Content */}
-                  <div className="relative">
+                  <div className="relative max-h-[85vh]">
                     <PrivacyWalletWidget />
                   </div>
                 </div>
