@@ -43,8 +43,6 @@ export interface UseFinalizeUnwrapParams {
   tokenAddress?: Address
   /** Callback function to execute when finalization succeeds */
   onSuccess?: () => void
-  /** Optional cache of pre-decrypted amounts (for performance optimization) */
-  decryptedCache?: Map<string, DecryptionResult>
 }
 
 /**
@@ -52,7 +50,7 @@ export interface UseFinalizeUnwrapParams {
  */
 export interface UseFinalizeUnwrapReturn {
   /** Function to finalize an unwrap request */
-  finalizeUnwrap: (burntAmount: `0x${string}`) => Promise<void>
+  finalizeUnwrap: (burntAmount: `0x${string}`, decryptionResult?: DecryptionResult) => Promise<void>
   /** Whether finalization is in progress */
   isFinalizing: boolean
   /** Whether finalization succeeded */
@@ -93,22 +91,25 @@ export interface UseFinalizeUnwrapReturn {
  * }
  * ```
  *
- * @example With caching for better performance
+ * @example With pre-decryption for better performance
  * ```tsx
  * // Pre-decrypt amounts in the background
  * const decryptedCache = useDecryptedAmounts(unwrapRequests, fheInstance)
  *
- * // Pass cache to finalization hook
+ * // Pass decryption result directly to finalization
  * const { finalizeUnwrap } = useFinalizeUnwrap({
  *   tokenAddress: '0x...',
- *   decryptedCache, // Instant finalization if already decrypted
  * })
+ *
+ * // Get the decryption result for this specific request
+ * const decryptionResult = decryptedCache.get(burntAmount)
+ * await finalizeUnwrap(burntAmount, decryptionResult) // Instant if already decrypted
  * ```
  */
 export function useFinalizeUnwrap(
   params: UseFinalizeUnwrapParams = {},
 ): UseFinalizeUnwrapReturn {
-  const { tokenAddress, onSuccess, decryptedCache } = params
+  const { tokenAddress, onSuccess } = params
   const { isFHEReady, fheInstance } = useFHEContext()
 
   const [isDecrypting, setIsDecrypting] = useState(false)
@@ -153,9 +154,10 @@ export function useFinalizeUnwrap(
    * Finalize an unwrap request by providing the decrypted amount and proof
    *
    * @param burntAmount - The encrypted amount handle (bytes32)
+   * @param decryptionResult - Optional pre-decrypted result for performance
    */
   const finalizeUnwrap = useCallback(
-    async (burntAmount: `0x${string}`) => {
+    async (burntAmount: `0x${string}`, decryptionResult?: DecryptionResult) => {
       setPendingTx(burntAmount)
 
       // Validation
@@ -171,14 +173,13 @@ export function useFinalizeUnwrap(
         let cleartextAmount: bigint
         let proof: `0x${string}`
 
-        // Try to use cached decryption result first
-        const cached = decryptedCache?.get(burntAmount)
-        if (cached && cached.status === 'success') {
-          // Use cached result
-          cleartextAmount = cached.cleartextAmount
-          proof = cached.proof
+        // Use provided decryption result if available
+        if (decryptionResult && decryptionResult.status === 'success') {
+          // Use pre-decrypted result
+          cleartextAmount = decryptionResult.cleartextAmount
+          proof = decryptionResult.proof
         } else {
-          // Decrypt on-demand if not in cache
+          // Decrypt on-demand if no result provided
           const { decryptPublicly } = await import('@shieldkit/core')
           const [amount, decryptionProof] = await decryptPublicly(
             fheInstance,
@@ -203,7 +204,7 @@ export function useFinalizeUnwrap(
         setIsDecrypting(false)
       }
     },
-    [fheInstance, tokenAddress, decryptedCache, writeContract],
+    [fheInstance, tokenAddress, writeContract],
   )
 
   return {

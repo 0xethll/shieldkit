@@ -1,20 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import type { FhevmInstance } from 'fhevmjs'
-import type { UnwrapRequest } from '@shieldkit/react'
+import type { UnwrapRequest, FhevmInstance, DecryptionResult } from '@shieldkit/react'
 import { decryptPublicly } from '@shieldkit/core'
-
-export interface DecryptedAmount {
-  cleartextAmount: bigint
-  proof: `0x${string}`
-  status: 'success'
-}
-
-export interface DecryptingAmount {
-  status: 'loading' | 'error'
-  error?: string
-}
-
-export type DecryptionResult = DecryptedAmount | DecryptingAmount
 
 /**
  * Hook to asynchronously decrypt amounts for unwrap requests
@@ -42,13 +28,6 @@ export function useDecryptedAmounts(
 
       // Skip if already finalized (has cleartext from indexer)
       if (request.isFinalized && request.cleartextAmount) {
-        setDecryptedCache((prev) =>
-          new Map(prev).set(burntAmount, {
-            cleartextAmount: BigInt(request.cleartextAmount),
-            proof: '0x' as `0x${string}`,
-            status: 'success',
-          })
-        )
         return
       }
 

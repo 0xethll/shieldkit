@@ -1,6 +1,7 @@
 import { useFinalizeUnwrap, type UnwrapRequest } from '@shieldkit/react'
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
-import type { DecryptionResult } from '../../hooks/useDecryptedAmounts'
+import type { DecryptionResult } from '@shieldkit/react'
+
 import { motion } from 'framer-motion'
 
 interface QueueItemProps {
@@ -26,7 +27,7 @@ export default function QueueItem({
 
   const handleFinalize = async () => {
     try {
-      await finalizeUnwrap(item.burntAmount as `0x${string}`)
+      await finalizeUnwrap(item.burntAmount as `0x${string}`, decryptionResult)
     } catch (err) {
       console.error('Finalize error:', err)
     }
