@@ -11,7 +11,6 @@ export interface PlaygroundState {
     wrap: boolean
     transfer: boolean
     unwrap: boolean
-    autoDeploy: boolean
   }
 
   // Theme configuration
@@ -103,7 +102,6 @@ export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
   wrap: ${features.wrap},
   transfer: ${features.transfer},
   unwrap: ${features.unwrap},
-  autoDeploy: ${features.autoDeploy}
 }`
 
     const componentCode = `<PrivacyWallet

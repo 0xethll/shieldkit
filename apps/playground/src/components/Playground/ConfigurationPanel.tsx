@@ -123,12 +123,6 @@ export default function ConfigurationPanel() {
             enabled={features.unwrap}
             onToggle={() => toggleFeature('unwrap')}
           />
-          <FeatureToggle
-            icon={<Zap className="w-4 h-4" />}
-            label="Auto-Deploy"
-            enabled={features.autoDeploy}
-            onToggle={() => toggleFeature('autoDeploy')}
-          />
         </div>
       </section>
 

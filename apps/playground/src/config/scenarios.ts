@@ -19,7 +19,6 @@ export interface ScenarioConfig {
     wrap: boolean
     transfer: boolean
     unwrap: boolean
-    autoDeploy: boolean
   }
   mockApp: {
     title: string
@@ -66,7 +65,6 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       wrap: true,
       transfer: false,
       unwrap: true,
-      autoDeploy: true,
     },
     mockApp: {
       title: 'Privacy Lending Platform',
@@ -83,7 +81,6 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       wrap: true,
       transfer: true,
       unwrap: true,
-      autoDeploy: true,
     },
     mockApp: {
       title: 'Privacy Payment App',
@@ -100,7 +97,6 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
       wrap: true,
       transfer: true,
       unwrap: true,
-      autoDeploy: true,
     },
     mockApp: {
       title: 'DeFi Application',
