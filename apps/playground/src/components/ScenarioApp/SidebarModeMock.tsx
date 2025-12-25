@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
 import { Wallet, ChevronRight, ChevronLeft, Shield, Lock, Send, Download } from 'lucide-react'
 import PrivacyWalletWidget from '../Widget/PrivacyWalletWidget'
+import ThemeProvider from '../Widget/ThemeProvider'
 
 export default function SidebarModeMock() {
   const { currentScenario } = usePlaygroundConfig()
@@ -160,24 +161,26 @@ export default function SidebarModeMock() {
 
         {/* Widget Content */}
         <div className="h-full overflow-hidden">
-          {isConnected ? (
-            <PrivacyWalletWidget />
-          ) : (
-            <div className="h-full flex items-center justify-center p-6">
-              <div className="text-center space-y-4">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
-                  <Wallet className="w-8 h-8 text-primary" />
+          <ThemeProvider>
+            {isConnected ? (
+              <PrivacyWalletWidget />
+            ) : (
+              <div className="h-full flex items-center justify-center p-6">
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+                    <Wallet className="w-8 h-8 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Connect your wallet to access confidential balance features
+                    </p>
+                  </div>
+                  <ConnectKitButton />
                 </div>
-                <div>
-                  <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Connect your wallet to access confidential balance features
-                  </p>
-                </div>
-                <ConnectKitButton />
               </div>
-            </div>
-          )}
+            )}
+          </ThemeProvider>
         </div>
       </aside>
     </div>
