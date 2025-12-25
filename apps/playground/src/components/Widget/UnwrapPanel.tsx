@@ -48,6 +48,7 @@ export default function UnwrapPanel({ tokens, getBalance, onUnwrapSuccess }: Unw
     decryptedBalance,
     decrypt,
     isDecrypting,
+    refetch: refetchBalance,
   } = useConfidentialBalanceFor({
     erc20Address,
     autoDecrypt: false,
@@ -63,6 +64,8 @@ export default function UnwrapPanel({ tokens, getBalance, onUnwrapSuccess }: Unw
       clearBalance(erc20Address)
 
       setAmount('')
+      // Refetch encrypted balance from contract
+      refetchBalance()
       // Refetch queue after successful unwrap request
       refetch()
     },
