@@ -52,6 +52,7 @@ export function ConfidentialWidget({
   const { isFHEReady } = useFHEContext()
 
   const [activeTab, setActiveTab] = useState<'wrap' | 'transfer' | 'unwrap'>(defaultTab)
+  const [cachedBalances, setCachedBalances] = useState<Record<string, bigint>>({})
 
   // Get enabled tabs based on features
   const tabs = [
@@ -137,15 +138,29 @@ export function ConfidentialWidget({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
-          {activeTab === 'wrap' && <WrapPanel tokens={tokens} onWrapSuccess={onWrapSuccess} />}
+          {activeTab === 'wrap' && (
+            <WrapPanel
+              tokens={tokens}
+              onWrapSuccess={onWrapSuccess}
+              cachedBalances={cachedBalances}
+              setCachedBalances={setCachedBalances}
+            />
+          )}
           {activeTab === 'transfer' && (
-            <TransferPanel tokens={tokens} onTransferSuccess={onTransferSuccess} />
+            <TransferPanel
+              tokens={tokens}
+              onTransferSuccess={onTransferSuccess}
+              cachedBalances={cachedBalances}
+              setCachedBalances={setCachedBalances}
+            />
           )}
           {activeTab === 'unwrap' && (
             <UnwrapPanel
               tokens={tokens}
               graphqlUrl={graphqlUrl}
               onUnwrapSuccess={onUnwrapSuccess}
+              cachedBalances={cachedBalances}
+              setCachedBalances={setCachedBalances}
             />
           )}
         </div>

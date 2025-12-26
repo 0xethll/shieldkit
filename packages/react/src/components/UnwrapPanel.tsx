@@ -28,13 +28,20 @@ interface UnwrapPanelProps {
   tokens: TokenConfig[]
   graphqlUrl: string
   onUnwrapSuccess?: (token: Address, amount: bigint) => void
+  cachedBalances: Record<string, bigint>
+  setCachedBalances: React.Dispatch<React.SetStateAction<Record<string, bigint>>>
 }
 
-export default function UnwrapPanel({ tokens, graphqlUrl, onUnwrapSuccess }: UnwrapPanelProps) {
+export default function UnwrapPanel({
+  tokens,
+  graphqlUrl,
+  onUnwrapSuccess,
+  cachedBalances,
+  setCachedBalances,
+}: UnwrapPanelProps) {
   const { fheInstance } = useFHEContext()
   const { address: userAddress } = useAccount()
 
-  const [cachedBalances, setCachedBalances] = useState<Record<string, bigint>>({})
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
   const [amount, setAmount] = useState('')
   const [isQueueExpanded, setIsQueueExpanded] = useState(true)

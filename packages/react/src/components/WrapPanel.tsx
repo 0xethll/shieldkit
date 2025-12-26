@@ -12,12 +12,18 @@ import { getTokenPrefix, formatErrorMessage } from '../utils/helpers'
 interface WrapPanelProps {
   tokens: TokenConfig[]
   onWrapSuccess?: (token: Address, amount: bigint) => void
+  cachedBalances: Record<string, bigint>
+  setCachedBalances: React.Dispatch<React.SetStateAction<Record<string, bigint>>>
 }
 
-export default function WrapPanel({ tokens, onWrapSuccess }: WrapPanelProps) {
+export default function WrapPanel({
+  tokens,
+  onWrapSuccess,
+  cachedBalances,
+  setCachedBalances,
+}: WrapPanelProps) {
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || '')
   const [amount, setAmount] = useState('')
-  const [cachedBalances, setCachedBalances] = useState<Record<string, bigint>>({})
 
   const selectedTokenConfig = useMemo(() => {
     return tokens.find((t) => t.symbol === selectedToken)

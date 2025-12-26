@@ -10,10 +10,16 @@ import { getTokenPrefix, formatErrorMessage } from '../utils/helpers'
 interface TransferPanelProps {
   tokens: TokenConfig[]
   onTransferSuccess?: (token: Address, recipient: Address, amount: bigint) => void
+  cachedBalances: Record<string, bigint>
+  setCachedBalances: React.Dispatch<React.SetStateAction<Record<string, bigint>>>
 }
 
-export default function TransferPanel({ tokens, onTransferSuccess }: TransferPanelProps) {
-  const [cachedBalances, setCachedBalances] = useState<Record<string, bigint>>({})
+export default function TransferPanel({
+  tokens,
+  onTransferSuccess,
+  cachedBalances,
+  setCachedBalances,
+}: TransferPanelProps) {
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || '')
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
