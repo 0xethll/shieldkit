@@ -21,12 +21,10 @@ bun add @shieldkit/react @shieldkit/core wagmi viem ethers
 
 ## Quick Start
 
-### 1. Setup Provider
-
-Wrap your app with `FHEProvider` to manage FHE initialization:
+### Option 1: Use Pre-built Widget (Fastest)
 
 ```tsx
-import { FHEProvider } from '@shieldkit/react'
+import { FHEProvider, ConfidentialWidget } from '@shieldkit/react'
 import { WagmiProvider } from 'wagmi'
 import { config } from './wagmi-config'
 
@@ -34,32 +32,47 @@ function App() {
   return (
     <WagmiProvider config={config}>
       <FHEProvider>
-        <YourApp />
+        <ConfidentialWidget
+          tokens={[
+            { symbol: 'USDC', address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238', decimals: 6, name: 'USD Coin' }
+          ]}
+          defaultTab="wrap"
+          features={{ wrap: true, transfer: true, unwrap: true }}
+          theme={{ type: 'dark', accent: 'purple', radius: 'medium' }}
+        />
       </FHEProvider>
     </WagmiProvider>
   )
 }
 ```
 
-### 2. Use Hooks
+### Option 2: Use Hooks for Custom UI
 
 ```tsx
-import { useWrap, useFHEContext } from '@shieldkit/react'
+import { FHEProvider, useWrap, useFHEContext } from '@shieldkit/react'
+import { WagmiProvider } from 'wagmi'
 
-function WrapComponent() {
+function App() {
+  return (
+    <WagmiProvider config={config}>
+      <FHEProvider>
+        <YourCustomUI />
+      </FHEProvider>
+    </WagmiProvider>
+  )
+}
+
+function YourCustomUI() {
   const { isFHEReady } = useFHEContext()
-  const { wrap, isLoading, isSuccess } = useWrap({
-    tokenAddress: '0xYourTokenAddress',
+  const { wrap, isLoading } = useWrap({
+    tokenAddress: '0x...',
     onSuccess: () => console.log('Wrapped!')
   })
 
   if (!isFHEReady) return <div>Initializing FHE...</div>
 
   return (
-    <button
-      onClick={() => wrap('100')}
-      disabled={isLoading}
-    >
+    <button onClick={() => wrap('100')} disabled={isLoading}>
       {isLoading ? 'Wrapping...' : 'Wrap 100 Tokens'}
     </button>
   )
@@ -67,6 +80,62 @@ function WrapComponent() {
 ```
 
 ## API Reference
+
+### UI Components
+
+#### ConfidentialWidget
+
+Complete pre-built widget for confidential token operations with wrap, transfer, and unwrap functionality.
+
+```tsx
+import { ConfidentialWidget } from '@shieldkit/react'
+
+<ConfidentialWidget
+  tokens={[
+    { symbol: 'USDC', address: '0x...', decimals: 6, name: 'USD Coin' }
+  ]}
+  defaultTab="wrap"
+  features={{ wrap: true, transfer: true, unwrap: true }}
+  theme={{ type: 'dark', accent: 'purple', radius: 'medium' }}
+  graphqlUrl="https://indexer.example.com/v1/graphql"
+  onWrapSuccess={(token, amount) => console.log('Wrapped!', token, amount)}
+  onTransferSuccess={(token, recipient, amount) => console.log('Transferred!')}
+  onUnwrapSuccess={(token, amount) => console.log('Unwrapped!')}
+/>
+```
+
+**Props:**
+- `tokens?: TokenConfig[]` - List of supported tokens
+- `defaultTab?: 'wrap' | 'transfer' | 'unwrap'` - Default tab (default: `'wrap'`)
+- `features?: { wrap?: boolean; transfer?: boolean; unwrap?: boolean }` - Feature toggles (default: all `true`)
+- `theme?: ThemeConfig` - Theme configuration (default: `{ type: 'dark', accent: 'purple', radius: 'medium' }`)
+- `graphqlUrl?: string` - GraphQL endpoint for unwrap queue (defaults to env var)
+- `className?: string` - Additional CSS class
+- `style?: React.CSSProperties` - Additional inline styles
+- `onWrapSuccess?: (token: Address, amount: bigint) => void` - Wrap success callback
+- `onTransferSuccess?: (token: Address, recipient: Address, amount: bigint) => void` - Transfer success callback
+- `onUnwrapSuccess?: (token: Address, amount: bigint) => void` - Unwrap success callback
+
+**TokenConfig Type:**
+```tsx
+interface TokenConfig {
+  symbol: string          // e.g., 'USDC'
+  address: Address        // Token wrapper address
+  decimals: number        // Token decimals (6 for USDC, 18 for ETH)
+  name: string           // Full token name
+}
+```
+
+**ThemeConfig Type:**
+```tsx
+interface ThemeConfig {
+  type: 'light' | 'dark'
+  accent: 'purple' | 'blue' | 'green' | 'orange'
+  radius: 'none' | 'small' | 'medium' | 'large'
+}
+```
+
+---
 
 ### Providers
 

@@ -1,11 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
-import PrivacyWalletWidget from './PrivacyWalletWidget'
-import { ThemeProvider } from '@shieldkit/react'
+import { ConfidentialWidget } from '@shieldkit/react'
 import { X } from 'lucide-react'
 
 export default function WalletModal() {
-  const { isWidgetOpen, closeWidget, theme } = usePlaygroundConfig()
+  const { isWidgetOpen, closeWidget, theme, selectedTokens, defaultTab, features } = usePlaygroundConfig()
 
   return (
     <AnimatePresence>
@@ -29,38 +28,28 @@ export default function WalletModal() {
               transition={{ type: 'spring', duration: 0.3, bounce: 0.25 }}
               className="pointer-events-auto w-full max-w-md mx-4"
             >
-              <ThemeProvider theme={theme}>
-                {/* Glassmorphism Container */}
-                <div
-                  className="relative backdrop-blur-xl shadow-2xl overflow-hidden"
-                  style={{
-                    backgroundColor: 'var(--color-background)',
-                    border: '1px solid var(--color-border)',
-                    borderRadius: 'calc(var(--radius-lg) * 3)',
-                  }}
+              {/* Glassmorphism Container with ConfidentialWidget */}
+              <div className="relative backdrop-blur-xl shadow-2xl overflow-hidden rounded-3xl">
+                {/* Close Button */}
+                <button
+                  onClick={closeWidget}
+                  className="absolute top-4 right-4 z-50 p-2 bg-black/20 hover:bg-black/30 backdrop-blur-sm transition-colors rounded-full border border-white/10"
+                  aria-label="Close widget"
                 >
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+                  <X className="w-4 h-4 text-white" />
+                </button>
 
-                  {/* Close Button */}
-                  <button
-                    onClick={closeWidget}
-                    className="absolute top-1 right-1 z-10 p-2 hover:bg-secondary transition-colors"
-                    style={{
-                      backgroundColor: 'color-mix(in srgb, var(--color-secondary) 80%, transparent)',
-                      border: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)',
-                      borderRadius: '9999px',
-                    }}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-
-                  {/* Widget Content */}
-                  <div className="relative max-h-[85vh]">
-                    <PrivacyWalletWidget />
-                  </div>
+                {/* Widget Content */}
+                <div className="relative max-h-[85vh] h-[600px]">
+                  <ConfidentialWidget
+                    tokens={selectedTokens}
+                    defaultTab={defaultTab}
+                    features={features}
+                    theme={theme}
+                    graphqlUrl={import.meta.env.VITE_ENVIO_GRAPHQL_URL || 'http://localhost:8080/v1/graphql'}
+                  />
                 </div>
-              </ThemeProvider>
+              </div>
             </motion.div>
           </div>
         </>

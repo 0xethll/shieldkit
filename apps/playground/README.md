@@ -100,10 +100,7 @@ src/
 │   │   ├── PreviewArea.tsx            # Right panel: integration demo
 │   │   └── CodeDisplay.tsx            # Bottom panel: code preview
 │   ├── Widget/
-│   │   ├── PrivacyWalletWidget.tsx    # Main confidential widget
-│   │   ├── WrapPanel.tsx              # Wrap tokens UI
-│   │   ├── TransferPanel.tsx          # Transfer UI
-│   │   └── UnwrapPanel.tsx            # Unwrap UI with queue
+│   │   └── WalletModal.tsx            # Modal wrapper for ConfidentialWidget
 │   ├── ScenarioApp/
 │   │   ├── DialogModeMock.tsx         # Dialog integration demo
 │   │   ├── SidebarModeMock.tsx        # Sidebar integration demo
@@ -111,11 +108,11 @@ src/
 │   └── ...
 ├── config/
 │   ├── scenarios.ts                   # Integration mode configs
-│   └── usePlaygroundConfig.ts         # Global config state
-├── hooks/
-│   └── useTokenBalances.ts            # Token balance management
+│   └── usePlaygroundConfig.ts         # Global config state & code generation
 └── App.tsx                            # Entry point with providers
 ```
+
+**Note:** The playground now uses `ConfidentialWidget` from `@shieldkit/react` package instead of local components.
 
 ## Key Concepts
 
@@ -170,7 +167,7 @@ The playground demonstrates two integration approaches:
 **Dialog Pattern:**
 ```tsx
 import { useState } from 'react'
-import { PrivacyWalletWidget } from '@shieldkit/react'
+import { ConfidentialWidget } from '@shieldkit/react'
 
 function MyApp() {
   const [showWidget, setShowWidget] = useState(false)
@@ -182,9 +179,19 @@ function MyApp() {
       </button>
 
       {showWidget && (
-        <Dialog onClose={() => setShowWidget(false)}>
-          <PrivacyWalletWidget />
-        </Dialog>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="w-full max-w-md h-[600px] relative rounded-xl overflow-hidden">
+            <button onClick={() => setShowWidget(false)}>✕</button>
+            <ConfidentialWidget
+              tokens={[
+                { symbol: 'USDC', address: '0x...', decimals: 6, name: 'USD Coin' }
+              ]}
+              defaultTab="wrap"
+              features={{ wrap: true, transfer: true, unwrap: true }}
+              theme={{ type: 'dark', accent: 'purple', radius: 'medium' }}
+            />
+          </div>
+        </div>
       )}
     </>
   )
@@ -194,22 +201,33 @@ function MyApp() {
 **Sidebar Pattern:**
 ```tsx
 import { useState } from 'react'
-import { PrivacyWalletWidget } from '@shieldkit/react'
+import { ConfidentialWidget } from '@shieldkit/react'
 
 function MyApp() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen relative">
       <main className={`flex-1 ${isSidebarOpen ? 'mr-96' : ''}`}>
         {/* Your app */}
       </main>
 
-      <aside className={`fixed right-0 w-96 ${isSidebarOpen ? '' : 'hidden'}`}>
+      <aside className={`absolute right-0 top-0 h-full w-96 transform transition-transform ${
+        isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
           Toggle
         </button>
-        <PrivacyWalletWidget />
+        <div className="h-full">
+          <ConfidentialWidget
+            tokens={[
+              { symbol: 'USDC', address: '0x...', decimals: 6, name: 'USD Coin' }
+            ]}
+            defaultTab="wrap"
+            features={{ wrap: true, transfer: true, unwrap: true }}
+            theme={{ type: 'dark', accent: 'purple', radius: 'medium' }}
+          />
+        </div>
       </aside>
     </div>
   )

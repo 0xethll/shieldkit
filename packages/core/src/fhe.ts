@@ -9,8 +9,8 @@ import { Signer } from 'ethers'
  * Returned after encrypting data for confidential computation
  */
 export interface EncryptedValue {
-  handle: Uint8Array<ArrayBufferLike>
-  proof: Uint8Array<ArrayBufferLike>
+  handle: Uint8Array
+  proof: Uint8Array
 }
 
 /**

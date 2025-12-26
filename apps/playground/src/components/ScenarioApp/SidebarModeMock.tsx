@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
-import { ThemeProvider } from '@shieldkit/react'
-import { Wallet, ChevronRight, ChevronLeft, Shield, Lock, Send, Download } from 'lucide-react'
-import PrivacyWalletWidget from '../Widget/PrivacyWalletWidget'
+import { ConfidentialWidget } from '@shieldkit/react'
+import { Wallet, ChevronRight, ChevronLeft, Lock, Send, Download } from 'lucide-react'
 
 export default function SidebarModeMock() {
-  const { currentScenario, theme } = usePlaygroundConfig()
+  const { currentScenario, theme, selectedTokens, defaultTab, features } = usePlaygroundConfig()
   const { isConnected } = useAccount()
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
 
@@ -161,26 +160,30 @@ export default function SidebarModeMock() {
 
         {/* Widget Content */}
         <div className="h-full overflow-hidden">
-          <ThemeProvider theme={theme} className="h-full">
-            {isConnected ? (
-              <PrivacyWalletWidget />
-            ) : (
-              <div className="h-full flex items-center justify-center p-6">
-                <div className="text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
-                    <Wallet className="w-8 h-8 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Connect your wallet to access confidential features
-                    </p>
-                  </div>
-                  <ConnectKitButton />
+          {isConnected ? (
+            <ConfidentialWidget
+              tokens={selectedTokens}
+              defaultTab={defaultTab}
+              features={features}
+              theme={theme}
+              graphqlUrl={import.meta.env.VITE_ENVIO_GRAPHQL_URL || 'http://localhost:8080/v1/graphql'}
+            />
+          ) : (
+            <div className="h-full flex items-center justify-center p-6" style={{ backgroundColor: 'var(--color-background, #1a1a1a)', color: 'var(--color-foreground, #ffffff)' }}>
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center mx-auto">
+                  <Wallet className="w-8 h-8 text-purple-500" />
                 </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
+                  <p className="text-sm text-gray-400 mb-4">
+                    Connect your wallet to access confidential features
+                  </p>
+                </div>
+                <ConnectKitButton />
               </div>
-            )}
-          </ThemeProvider>
+            </div>
+          )}
         </div>
       </aside>
     </div>

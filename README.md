@@ -104,7 +104,9 @@ const wrapper = await factory.createWrapper(tokenAddress, 'cUSDC')
 
 ### @shieldkit/react
 
-React hooks and utilities:
+React hooks, components, and utilities for confidential token operations:
+
+**Hooks:**
 - `useWrap` - Wrap ERC20 tokens to confidential tokens
 - `useTransfer` - Transfer confidential tokens
 - `useUnwrap` - Request unwrap to ERC20
@@ -112,23 +114,50 @@ React hooks and utilities:
 - `useFactory` - Create new wrapper contracts
 - `FHEProvider` - Global FHE context provider
 
+**UI Components:**
+- `ConfidentialWidget` - Complete pre-built widget for all confidential operations
+- `ThemeProvider` - Theme system for customization
+- Panel components (`WrapPanel`, `TransferPanel`, `UnwrapPanel`) for advanced customization
+
 **Install:**
 ```bash
 bun add @shieldkit/react @shieldkit/core ethers wagmi viem
 ```
 
-**Usage:**
+**Quick Start (with UI):**
 ```tsx
-import { FHEProvider } from '@shieldkit/react'
+import { FHEProvider, ConfidentialWidget } from '@shieldkit/react'
 import { WagmiProvider } from 'wagmi'
 
 function App() {
   return (
     <WagmiProvider config={wagmiConfig}>
       <FHEProvider>
-        <YourApp />
+        <ConfidentialWidget
+          tokens={[
+            { symbol: 'USDC', address: '0x...', decimals: 6, name: 'USD Coin' }
+          ]}
+          defaultTab="wrap"
+          features={{ wrap: true, transfer: true, unwrap: true }}
+          theme={{ type: 'dark', accent: 'purple', radius: 'medium' }}
+        />
       </FHEProvider>
     </WagmiProvider>
+  )
+}
+```
+
+**Or use hooks only (headless):**
+```tsx
+import { FHEProvider, useWrap } from '@shieldkit/react'
+
+function MyCustomUI() {
+  const { wrap, isLoading } = useWrap({ tokenAddress: '0x...' })
+
+  return (
+    <button onClick={() => wrap('100')} disabled={isLoading}>
+      Wrap 100 tokens
+    </button>
   )
 }
 ```
