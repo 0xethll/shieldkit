@@ -120,4 +120,21 @@ export type { ChainId, ContractAddresses } from './config/contracts'
 // Export utilities
 export { getEthersSigner, clientToSigner } from './utils/client-to-signer'
 
+// Export theme system
+export {
+  ThemeProvider,
+  accentColors,
+  themeColors,
+  radiusSizes,
+  DEFAULT_THEME,
+  PRESET_THEMES,
+} from './themes'
+export type {
+  ThemeProviderProps,
+  ThemeType,
+  AccentColor,
+  RadiusSize,
+  ThemeConfig,
+} from './themes'
+
 export const PACKAGE_VERSION = '0.1.0'

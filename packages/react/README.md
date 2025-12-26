@@ -7,6 +7,7 @@ React hooks and providers for ShieldKit - Easy integration of confidential token
 - 🎣 **React Hooks**: Easy-to-use hooks for all confidential token operations
 - ⚛️ **FHE Context**: Global FHE instance and signer management
 - 🔐 **Encryption Built-in**: Automatic FHE encryption for confidential operations
+- 🎨 **Theme System**: Built-in theming with light/dark mode and customizable colors
 - 🎯 **Type-Safe**: Full TypeScript support with comprehensive types
 - ⚡ **Optimized**: Built on wagmi/viem with singleton FHE initialization
 - 📦 **Lightweight**: Minimal dependencies, framework-agnostic core
@@ -383,6 +384,81 @@ if (wrappedAddress) {
 - `wrappedAddress: Address | null` - Wrapper address (null if doesn't exist)
 - `isLoading: boolean` - Whether query is loading
 - `refetch: () => void` - Refetch wrapper address
+
+### Theme System
+
+#### ThemeProvider
+
+Apply theme configuration to components using CSS custom properties.
+
+```tsx
+import { ThemeProvider } from '@shieldkit/react'
+
+// Controlled mode - external state controls theme
+const [theme, setTheme] = useState({
+  type: 'dark',
+  accent: 'purple',
+  radius: 'medium'
+})
+
+<ThemeProvider theme={theme}>
+  <YourComponents />
+</ThemeProvider>
+
+// Uncontrolled mode - uses default theme
+<ThemeProvider defaultTheme={{ type: 'light', accent: 'blue', radius: 'large' }}>
+  <YourComponents />
+</ThemeProvider>
+
+// Minimal - uses built-in default (dark purple medium)
+<ThemeProvider>
+  <YourComponents />
+</ThemeProvider>
+```
+
+**Available Options:**
+- `type`: `'dark'` | `'light'`
+- `accent`: `'purple'` | `'blue'` | `'green'` | `'orange'`
+- `radius`: `'none'` | `'small'` | `'medium'` | `'large'`
+
+**Preset Themes:**
+```tsx
+import { ThemeProvider, PRESET_THEMES } from '@shieldkit/react'
+
+<ThemeProvider theme={PRESET_THEMES.darkPurple}>
+  <YourComponents />
+</ThemeProvider>
+
+// Available presets:
+// - darkPurple (default)
+// - darkBlue
+// - lightPurple
+// - lightBlue
+```
+
+**Custom Styling:**
+The ThemeProvider sets CSS custom properties that you can use in your styles:
+
+```css
+/* Colors */
+--color-background
+--color-foreground
+--color-muted
+--color-muted-foreground
+--color-border
+--color-secondary
+--color-secondary-foreground
+--color-accent
+--color-accent-foreground
+--color-primary
+--color-primary-hover
+--color-primary-foreground
+
+/* Border Radius */
+--radius-lg
+--radius-md
+--radius-sm
+```
 
 ### Utilities
 

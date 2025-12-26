@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
+import { ThemeProvider } from '@shieldkit/react'
 import { Wallet, ChevronRight, ChevronLeft, Shield, Lock, Send, Download } from 'lucide-react'
 import PrivacyWalletWidget from '../Widget/PrivacyWalletWidget'
-import ThemeProvider from '../Widget/ThemeProvider'
 
 export default function SidebarModeMock() {
-  const { currentScenario } = usePlaygroundConfig()
+  const { currentScenario, theme } = usePlaygroundConfig()
   const { isConnected } = useAccount()
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
 
@@ -161,7 +161,7 @@ export default function SidebarModeMock() {
 
         {/* Widget Content */}
         <div className="h-full overflow-hidden">
-          <ThemeProvider>
+          <ThemeProvider theme={theme} className="h-full">
             {isConnected ? (
               <PrivacyWalletWidget />
             ) : (

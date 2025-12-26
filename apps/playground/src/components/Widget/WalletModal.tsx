@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import PrivacyWalletWidget from './PrivacyWalletWidget'
-import ThemeProvider from './ThemeProvider'
+import { ThemeProvider } from '@shieldkit/react'
 import { X } from 'lucide-react'
 
 export default function WalletModal() {
-  const { isWidgetOpen, closeWidget } = usePlaygroundConfig()
+  const { isWidgetOpen, closeWidget, theme } = usePlaygroundConfig()
 
   return (
     <AnimatePresence>
@@ -29,7 +29,7 @@ export default function WalletModal() {
               transition={{ type: 'spring', duration: 0.3, bounce: 0.25 }}
               className="pointer-events-auto w-full max-w-md mx-4"
             >
-              <ThemeProvider>
+              <ThemeProvider theme={theme}>
                 {/* Glassmorphism Container */}
                 <div
                   className="relative backdrop-blur-xl shadow-2xl overflow-hidden"

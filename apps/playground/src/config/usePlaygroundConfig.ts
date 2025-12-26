@@ -70,7 +70,7 @@ export default function App() {
       code: `import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
-import { PrivacyWalletWidget } from '@shieldkit/react'
+import { PrivacyWalletWidget, ThemeProvider } from '@shieldkit/react'
 import { Shield, LayoutDashboard } from 'lucide-react'
 
 export default function MyDashboard() {
@@ -115,22 +115,24 @@ export default function MyDashboard() {
       {/* Dialog Widget */}
       {showWidget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-full max-w-md h-[600px] relative">
-            <button
-              onClick={() => setShowWidget(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              ✕
-            </button>
-            <PrivacyWalletWidget
-              tokens={${tokensArray}}
-              defaultTab="${defaultTab}"
-              features={{
-                wrap: ${features.wrap},
-                transfer: ${features.transfer},
-                unwrap: ${features.unwrap},
-              }}
-            />
+          <div className="w-full max-w-md h-[600px] relative rounded-xl overflow-hidden">
+            <ThemeProvider theme={{ type: '${theme.type}', accent: '${theme.accent}', radius: '${theme.radius}' }}>
+              <button
+                onClick={() => setShowWidget(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
+              >
+                ✕
+              </button>
+              <PrivacyWalletWidget
+                tokens={${tokensArray}}
+                defaultTab="${defaultTab}"
+                features={{
+                  wrap: ${features.wrap},
+                  transfer: ${features.transfer},
+                  unwrap: ${features.unwrap},
+                }}
+              />
+            </ThemeProvider>
           </div>
         </div>
       )}
@@ -200,7 +202,7 @@ export default function App() {
       code: `import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
-import { PrivacyWalletWidget } from '@shieldkit/react'
+import { PrivacyWalletWidget, ThemeProvider } from '@shieldkit/react'
 import { Wallet, ChevronRight, ChevronLeft } from 'lucide-react'
 
 export default function MyWalletApp() {
@@ -259,28 +261,33 @@ export default function MyWalletApp() {
 
         {/* Widget Content */}
         <div className="h-full overflow-hidden">
-          {isConnected ? (
-            <PrivacyWalletWidget
-              tokens={${tokensArray}}
-              defaultTab="${defaultTab}"
-              features={{
-                wrap: ${features.wrap},
-                transfer: ${features.transfer},
-                unwrap: ${features.unwrap},
-              }}
-            />
-          ) : (
-            <div className="h-full flex items-center justify-center p-6">
-              <div className="text-center">
-                <Wallet className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
-                <p className="text-sm text-gray-600 mb-4">
-                  Connect to access confidential features
-                </p>
-                <ConnectKitButton />
+          <ThemeProvider
+            theme={{ type: '${theme.type}', accent: '${theme.accent}', radius: '${theme.radius}' }}
+            className="h-full"
+          >
+            {isConnected ? (
+              <PrivacyWalletWidget
+                tokens={${tokensArray}}
+                defaultTab="${defaultTab}"
+                features={{
+                  wrap: ${features.wrap},
+                  transfer: ${features.transfer},
+                  unwrap: ${features.unwrap},
+                }}
+              />
+            ) : (
+              <div className="h-full flex items-center justify-center p-6">
+                <div className="text-center">
+                  <Wallet className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                  <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Connect to access confidential features
+                  </p>
+                  <ConnectKitButton />
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </ThemeProvider>
         </div>
       </aside>
     </div>
