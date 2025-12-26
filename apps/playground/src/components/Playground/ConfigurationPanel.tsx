@@ -31,14 +31,9 @@ export default function ConfigurationPanel() {
     setThemeType,
     setAccentColor,
     setRadiusSize,
-    generateCode,
-    getAllTokens,
   } = usePlaygroundConfig()
 
   const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false)
-
-  // Get all available tokens (mainstream + custom)
-  const allTokens = getAllTokens()
 
   const toggleToken = (token: TokenConfig) => {
     const exists = selectedTokens.some((t) => t.address === token.address)
@@ -61,13 +56,6 @@ export default function ConfigurationPanel() {
     e.stopPropagation()
     // removeToken handles both customTokens and selectedTokens
     removeToken(tokenAddress)
-  }
-
-  const copyCode = () => {
-    const code = generateCode()
-    navigator.clipboard.writeText(code)
-    // TODO: Add toast notification
-    console.log('Code copied to clipboard!')
   }
 
   return (
@@ -299,26 +287,6 @@ export default function ConfigurationPanel() {
         </div>
       </section>
 
-      {/* Copy Code Button */}
-      <button
-        onClick={copyCode}
-        className="w-full px-4 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-lg font-medium text-sm transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
-      >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-          />
-        </svg>
-        Copy Code
-      </button>
 
       {/* Add Token Modal */}
       <AddTokenModal
