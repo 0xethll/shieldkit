@@ -101,7 +101,7 @@ export default function QueueItem({
             {/* Amount */}
             {getAmountDisplay()}
             {/* Time */}
-            <div className="text-[10px] text-muted-foreground">
+            <div className="text-muted-foreground" style={{ fontSize: '9px' }}>
               {timeAgo(item.requestTimestamp)}
             </div>
           </div>
@@ -110,7 +110,8 @@ export default function QueueItem({
           <button
             onClick={handleFinalize}
             disabled={!canFinalize || item.isFinalized || isSuccess}
-            className="px-1 py-1.5 bg-primary hover:bg-primary/90 disabled:bg-muted text-primary-foreground rounded-dynamic text-[11px] font-medium transition-all disabled:cursor-not-allowed flex items-center justify-center gap-1 shrink-0"
+            className="px-1 py-1.5 bg-primary hover:bg-primary/90 disabled:bg-muted text-primary-foreground rounded-dynamic font-medium transition-all disabled:cursor-not-allowed flex items-center justify-center gap-1 shrink-0"
+            style={{ fontSize: '10px' }}
           >
             {isThisPending || (isFinalizing && !item.isFinalized) ? (
               <>

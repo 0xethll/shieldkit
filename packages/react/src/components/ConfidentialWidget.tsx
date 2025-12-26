@@ -74,7 +74,7 @@ export function ConfidentialWidget({
       <div className="w-full h-full flex flex-col">
         {/* Header */}
         <div className="flex-shrink-0 px-6 pt-5 border-b border-border/50">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-2 mt-2">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-dynamic-lg bg-primary/10">
                 <Wallet className="w-5 h-5 text-primary" />
@@ -109,7 +109,7 @@ export function ConfidentialWidget({
 
         {/* Tabs */}
         {tabs.length > 0 && (
-          <div className="flex-shrink-0 px-6 pt-4">
+          <div className="flex-shrink-0 px-6 p-2">
             <div className="flex gap-1 p-1 bg-secondary/50 rounded-dynamic-lg">
               {tabs.map((tab) => (
                 <button

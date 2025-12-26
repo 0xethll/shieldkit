@@ -184,13 +184,13 @@ export default function WrapPanel({
             step="0.000001"
             min="0"
           />
-          <button
+          {/* <button
             onClick={() => setAmount(currentBalance.toString())}
             disabled={isLoading || currentBalance === 0}
             className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 rounded-dynamic transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             MAX
-          </button>
+          </button> */}
         </div>
         {/* Insufficient Balance Error */}
         {amountExceedsBalance && (
@@ -200,10 +200,10 @@ export default function WrapPanel({
         )}
       </div>
 
-      {/* Private Balance Display */}
-      <div className="px-4 py-3 bg-gradient-to-br from-primary/5 to-transparent border border-primary/10 rounded-dynamic-xl">
+      {/* Encrypted Balance Display */}
+      <div className="px-4 py-3 bg-gradient-to-br from-primary/5 to-transparent border border-border/50 rounded-dynamic-xl">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-muted-foreground">Private Balance</span>
+          <span className="text-xs text-muted-foreground">Encrypted Balance</span>
           <Lock className="w-3 h-3 text-primary" />
         </div>
         {isLoadingWrapped ? (
@@ -254,7 +254,7 @@ export default function WrapPanel({
       <button
         onClick={handleExecuteStep}
         disabled={isLoading || !amount || parseFloat(amount) <= 0 || amountExceedsBalance}
-        className="w-full px-4 py-3.5 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground rounded-dynamic-xl font-semibold text-sm transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full px-4 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 disabled:from-muted disabled:to-muted text-primary-foreground rounded-dynamic-xl font-semibold text-sm transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {getButtonIcon()}
         {getButtonText()}

@@ -10,8 +10,8 @@ export const config = createConfig(
 
     appName: 'ShieldKit Playground',
     appDescription: 'Interactive demo for @shieldkit/react confidential features',
-    appUrl: 'https://shieldkit.vercel.app/',
-    appIcon: 'https://shieldkit.vercel.app/favicon.ico',
+    appUrl: 'https://shieldkit-playground.vercel.app/',
+    appIcon: 'https://shieldkit-playground.vercel.app/favicon.ico',
 
     chains: [sepolia],
     transports: {

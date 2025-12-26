@@ -75,7 +75,7 @@ export default function TokenSelector({
 
         {/* Dropdown */}
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-background border border-border rounded-dynamic-xl shadow-lg z-10">
+          <div className="absolute top-full w-full mt-2 p-2 bg-background border border-border rounded-dynamic-xl shadow-lg z-10">
             {tokens.map((token) => (
               <button
                 key={token}
