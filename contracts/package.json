@@ -1,13 +1,17 @@
 {
   "name": "contracts",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "private": true,
   "type": "module",
   "scripts": {
+    "build": "hardhat compile",
     "test": "hardhat test test/USDERC20.test.ts test/ConfidentialTokenFactory.test.ts",
     "test:all": "hardhat test",
     "test:confidential": "hardhat test test/ConfidentialERC20Wrapper.test.ts",
     "test:coverage": "hardhat coverage",
-    "test:gas": "REPORT_GAS=true hardhat test"
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf artifacts cache node_modules"
   },
   "dependencies": {
     "@fhevm/solidity": "^0.9.1",

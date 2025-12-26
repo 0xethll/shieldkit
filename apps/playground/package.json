@@ -1,0 +1,41 @@
+{
+  "name": "playground",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Interactive playground demonstrating @shieldkit/react hooks and components",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@shieldkit/core": "workspace:*",
+    "@shieldkit/react": "workspace:*",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-query": "^5.62.7",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "alchemy-sdk": "^3.6.5",
+    "connectkit": "^1.9.1",
+    "ethers": "catalog:",
+    "framer-motion": "^12.23.26",
+    "lucide-react": "^0.562.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-resizable-panels": "^4.0.9",
+    "react-syntax-highlighter": "^16.1.0",
+    "tailwindcss": "^4.1.18",
+    "viem": "catalog:",
+    "wagmi": "^2.12.29",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "catalog:",
+    "vite": "^5.4.11",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  }
+}

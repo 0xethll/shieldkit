@@ -6,14 +6,18 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false,
-    "allowImportingTsExtensions": false
+    "jsx": "react-jsx"
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ],
+  "references": [
+    { "path": "../core" }
   ]
 }

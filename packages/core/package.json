@@ -1,0 +1,44 @@
+{
+  "name": "@shieldkit/core",
+  "version": "0.1.0",
+  "description": "Core SDK for ShieldKit - Framework-agnostic confidential token operations with FHE",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "echo 'Build not required for TypeScript source'",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf node_modules dist"
+  },
+  "dependencies": {
+    "@zama-fhe/relayer-sdk": "catalog:",
+    "viem": "catalog:",
+    "ethers": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "happy-dom": "catalog:"
+  },
+  "keywords": [
+    "fhe",
+    "zama",
+    "privacy",
+    "confidential",
+    "sdk"
+  ],
+  "author": "devasher",
+  "license": "MIT"
+}

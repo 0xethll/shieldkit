@@ -1,0 +1,26 @@
+# Bun Configuration
+# https://bun.sh/docs/runtime/bunfig
+
+[install]
+# Use npm registry
+registry = "https://registry.npmjs.org/"
+
+# Use exact versions in package.json
+exact = false
+
+# Auto-install peer dependencies
+auto = true
+
+# Workspaces
+[install.scopes]
+# Add private scopes here if needed
+# "@myorg" = { token = "$NPM_TOKEN", url = "https://npm.pkg.github.com" }
+
+[test]
+# Test configuration
+coverage = true
+preload = []
+
+[run]
+# Automatically install packages when running scripts
+auto-install = true
