@@ -71,7 +71,7 @@ export const scenarios: Record<ScenarioId, ScenarioConfig> = {
     },
     theme: {
       title: 'My DeFi Dashboard',
-      description: 'Add confidential balance to your existing dApp',
+      description: 'Add confidential features to your existing dApp',
       primaryColor: 'blue',
     },
   },

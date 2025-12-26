@@ -22,7 +22,7 @@ export default function DialogModeMock() {
             </div>
           </div>
 
-          {/* Wallet Connection & Confidential Balance Button */}
+          {/* Wallet Connection & Confidential Widget Button */}
           <div className="flex items-center gap-3">
             {isConnected && (
               <button
@@ -30,7 +30,7 @@ export default function DialogModeMock() {
                 className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-medium transition-all flex items-center gap-2 border border-primary/20"
               >
                 <Shield className="w-4 h-4" />
-                Confidential Balance
+                Confidential Widget
               </button>
             )}
             <ConnectKitButton />
@@ -45,7 +45,7 @@ export default function DialogModeMock() {
           <div className="text-center space-y-3 py-6">
             <h2 className="text-3xl font-bold">Your DeFi Dashboard</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              This demonstrates how to integrate the confidential balance widget as a dialog/popup -
+              This demonstrates how to integrate the confidential widget as a dialog/popup -
               perfect for auxiliary features in your existing dApp.
             </p>
           </div>
@@ -93,11 +93,11 @@ export default function DialogModeMock() {
               </div>
             </div>
 
-            {/* Feature 2 - Confidential Balance CTA */}
+            {/* Feature 2 - Confidential Widget CTA */}
             <div className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold mb-2">Confidential Balance</h3>
+                  <h3 className="text-lg font-bold mb-2">Confidential Widget</h3>
                   <p className="text-sm text-muted-foreground">
                     Keep your balances private with FHE encryption
                   </p>
@@ -118,7 +118,7 @@ export default function DialogModeMock() {
                   onClick={openWidget}
                   className="w-full px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-xl font-semibold transition-all transform hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  Open Confidential Balance Widget
+                  Open Confidential Widget
                 </button>
               ) : (
                 <button
@@ -140,7 +140,7 @@ export default function DialogModeMock() {
                   Dialog Mode Integration
                 </p>
                 <p className="text-xs text-blue-600/80 dark:text-blue-400/80">
-                  In this mode, the widget opens as a dialog/popup when users click the "Confidential Balance"
+                  In this mode, the widget opens as a dialog/popup when users click the "Confidential Widget"
                   button. This is ideal when privacy features are complementary to your main dApp functionality.
                   The widget can be triggered from navigation bars, toolbars, or feature cards.
                 </p>

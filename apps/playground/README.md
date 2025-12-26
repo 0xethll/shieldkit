@@ -1,6 +1,6 @@
 # ShieldKit Playground
 
-Interactive playground demonstrating different integration modes for the confidential balance widget.
+Interactive playground demonstrating different integration modes for the confidential widget.
 
 ## Overview
 
@@ -18,7 +18,7 @@ The ShieldKit Playground is a full-featured interactive demo that showcases how 
 1. **Dialog Mode** - Widget as a popup/modal
    - Best for: Auxiliary features, occasional access
    - Pattern: Click button → Opens dialog → Perform operations
-   - Example: Adding confidential balance to existing DeFi dashboard
+   - Example: Adding confidential widget to existing DeFi dashboard
 
 2. **Sidebar Mode** - Widget as a persistent sidebar
    - Best for: Core features, frequent access
@@ -143,7 +143,7 @@ Each mode demonstrates a different UI pattern:
     integrationMode: 'dialog',
     theme: {
       title: 'My DeFi Dashboard',
-      description: 'Add confidential balance to your existing dApp',
+      description: 'Add confidential widget to your existing dApp',
     },
   }
 }
@@ -178,7 +178,7 @@ function MyApp() {
   return (
     <>
       <button onClick={() => setShowWidget(true)}>
-        Open Confidential Balance
+        Open Confidential Widget
       </button>
 
       {showWidget && (

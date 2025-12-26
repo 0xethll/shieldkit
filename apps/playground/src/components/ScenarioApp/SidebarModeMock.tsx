@@ -45,7 +45,7 @@ export default function SidebarModeMock() {
                 Privacy-First Wallet Experience
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                This demonstrates the sidebar integration mode - perfect when confidential balance is a
+                This demonstrates the sidebar integration mode - perfect when confidential is a
                 core feature of your application. The widget stays accessible while users navigate your dApp.
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function SidebarModeMock() {
                 <StepItem
                   number="1"
                   title="Always Accessible"
-                  description="The confidential balance widget is embedded in a collapsible sidebar on the right"
+                  description="The confidential widget is embedded in a collapsible sidebar on the right"
                 />
                 <StepItem
                   number="2"
@@ -127,7 +127,7 @@ export default function SidebarModeMock() {
                     Sidebar Mode Integration
                   </p>
                   <p className="text-xs text-purple-600/80 dark:text-purple-400/80">
-                    The confidential balance widget is embedded as a persistent sidebar on the right side of the
+                    The confidential widget is embedded as a persistent sidebar on the right side of the
                     screen. Click the toggle button on the sidebar to collapse/expand it. This pattern works best
                     for wallet apps, privacy-focused dApps, or when confidential operations are frequently used.
                   </p>
@@ -173,7 +173,7 @@ export default function SidebarModeMock() {
                   <div>
                     <h4 className="font-semibold mb-2">Connect Your Wallet</h4>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Connect your wallet to access confidential balance features
+                      Connect your wallet to access confidential features
                     </p>
                   </div>
                   <ConnectKitButton />

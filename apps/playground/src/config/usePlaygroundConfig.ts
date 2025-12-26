@@ -23,7 +23,7 @@ import { Dialog } from '@/components/ui/dialog' // Your dialog component`
   return (
     <>
       <button onClick={() => setShowWidget(true)}>
-        Open Confidential Balance
+        Open Confidential Widget
       </button>
 
       {showWidget && (
