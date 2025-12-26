@@ -3,6 +3,8 @@ import { useUnwrap } from '../hooks/useUnwrap'
 import { useConfidentialBalanceFor } from '../hooks/useConfidentialBalance'
 import { useUnwrapQueue } from '../hooks/useUnwrapQueue'
 import { useFHEContext } from '../context/FHEContext'
+import { useBalance, useAccount } from 'wagmi'
+import { formatUnits } from 'viem'
 import {
   Download,
   Loader2,
@@ -30,6 +32,7 @@ interface UnwrapPanelProps {
 
 export default function UnwrapPanel({ tokens, graphqlUrl, onUnwrapSuccess }: UnwrapPanelProps) {
   const { fheInstance } = useFHEContext()
+  const { address: userAddress } = useAccount()
 
   const [cachedBalances, setCachedBalances] = useState<Record<string, bigint>>({})
   const [selectedToken, setSelectedToken] = useState(tokens[0]?.symbol || 'USDC')
@@ -39,6 +42,19 @@ export default function UnwrapPanel({ tokens, graphqlUrl, onUnwrapSuccess }: Unw
   // Get selected token config
   const selectedTokenConfig = tokens.find((t) => t.symbol === selectedToken)
   const erc20Address = selectedTokenConfig?.address as Address
+
+  // Fetch ERC20 balance for the selected token
+  const { data: erc20BalanceData, refetch: refetchErc20Balance } = useBalance({
+    address: userAddress,
+    token: erc20Address,
+  })
+
+  // Format ERC20 balance for display
+  const erc20Balance = useMemo(() => {
+    if (!erc20BalanceData) return '0.0000'
+    const formatted = formatUnits(erc20BalanceData.value, erc20BalanceData.decimals)
+    return parseFloat(formatted).toFixed(4)
+  }, [erc20BalanceData])
 
   // Use new hook from @shieldkit/react
   const {
@@ -320,6 +336,11 @@ export default function UnwrapPanel({ tokens, graphqlUrl, onUnwrapSuccess }: Unw
           </div>
         </button>
 
+        {/* ERC20 Balance Display */}
+        <p className="text-xs text-muted-foreground mb-3">
+          {selectedToken}: {erc20Balance}
+        </p>
+
         {/* Queue Content - collapsible on mobile, always visible on desktop */}
         <div className={`${isQueueExpanded ? 'block' : 'hidden'} md:block`}>
           {isQueueLoading && (!unwrapRequests || unwrapRequests.length === 0) ? (
@@ -337,6 +358,8 @@ export default function UnwrapPanel({ tokens, graphqlUrl, onUnwrapSuccess }: Unw
                     item={item}
                     decryptionResult={decryptedCache.get(item.burntAmount)}
                     onFinalizeSuccess={() => {
+                      // Immediately refetch ERC20 balance
+                      refetchErc20Balance()
                       // Refetch the queue after finalization
                       setTimeout(() => refetch(), 1500)
                     }}

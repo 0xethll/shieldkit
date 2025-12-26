@@ -1,13 +1,13 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useWrapFlow } from '../hooks/useWrapFlow'
 import { useConfidentialBalanceFor } from '../hooks/useConfidentialBalance'
+import { useMultiTokenBalances } from '../hooks/useMultiTokenBalances'
 import { Lock, Loader2, CheckCircle2, Rocket, AlertCircle } from 'lucide-react'
 import type { Address } from 'viem'
 import type { TokenConfig } from './types'
 import TokenSelector from './TokenSelector'
 import WrapStepIndicator from './WrapStepIndicator'
 import { getTokenPrefix, formatErrorMessage } from '../utils/helpers'
-import { useBalance } from 'wagmi'
 
 interface WrapPanelProps {
   tokens: TokenConfig[]
@@ -25,18 +25,15 @@ export default function WrapPanel({ tokens, onWrapSuccess }: WrapPanelProps) {
 
   const tokenAddress = selectedTokenConfig?.address as Address
 
-  // Use wagmi's useBalance for ERC20 balance
-  const { data: balanceData } = useBalance({
-    address: tokenAddress as Address | undefined,
-    token: tokenAddress,
-  })
+  // Fetch all token balances in batch
+  const { balances } = useMultiTokenBalances(tokens)
 
-  // Get current ERC20 balance
+  // Get current ERC20 balance for selected token
   const currentBalance = useMemo(() => {
-    if (!balanceData) return 0
-    const formatted = Number(balanceData.formatted)
+    if (!selectedToken || !balances[selectedToken]) return 0
+    const formatted = Number(balances[selectedToken].formatted)
     return isNaN(formatted) ? 0 : formatted
-  }, [balanceData])
+  }, [selectedToken, balances])
 
   // Check if amount exceeds balance
   const amountExceedsBalance = useMemo(() => {
@@ -148,13 +145,9 @@ export default function WrapPanel({ tokens, onWrapSuccess }: WrapPanelProps) {
 
   // Helper to get balance for TokenSelector
   const getBalanceForSelector = (symbol: string) => {
-    const token = tokens.find((t) => t.symbol === symbol)
-    if (!token) return null
-
-    if (symbol === selectedToken && balanceData) {
-      return parseFloat(balanceData.formatted).toFixed(4)
-    }
-    return null
+    const balance = balances[symbol]
+    if (!balance) return null
+    return parseFloat(balance.formatted).toFixed(4)
   }
 
   return (

@@ -87,6 +87,9 @@ export type {
   UseConfidentialBalanceForReturn,
 } from './hooks/useConfidentialBalance'
 
+export { useMultiTokenBalances } from './hooks/useMultiTokenBalances'
+export type { TokenBalance } from './hooks/useMultiTokenBalances'
+
 // Re-export core types for convenience
 export type {
   WrapParams,
