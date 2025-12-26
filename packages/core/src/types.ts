@@ -1,4 +1,4 @@
-// TypeScript types for Z-Payment
+// TypeScript types for shieldkit
 
 import type { FhevmInstance } from '@zama-fhe/relayer-sdk/bundle'
 import type { Address, Hash } from 'viem'

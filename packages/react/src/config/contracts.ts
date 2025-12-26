@@ -1,7 +1,7 @@
 /**
  * Contract Configuration
  *
- * This file contains contract addresses for Z-Payment infrastructure.
+ * This file contains contract addresses for shieldkit infrastructure.
  * Only contains the Factory contract address - specific token addresses
  * should be configured at the application level.
  */
@@ -19,7 +19,7 @@ export const CHAIN_IDS = {
 export type ChainId = typeof CHAIN_IDS[keyof typeof CHAIN_IDS]
 
 /**
- * Contract addresses for Z-Payment infrastructure
+ * Contract addresses for shieldkit infrastructure
  * Contains only the ConfidentialTokenFactory address
  */
 export interface ContractAddresses {

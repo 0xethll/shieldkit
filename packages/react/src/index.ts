@@ -1,7 +1,7 @@
 /**
  * @shieldkit/react
  *
- * React hooks and providers for Z-Payment
+ * React hooks and providers
  * Built on @shieldkit/core and wagmi
  *
  * @example

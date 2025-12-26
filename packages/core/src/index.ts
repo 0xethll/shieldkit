@@ -1,7 +1,7 @@
 /**
  * @shieldkit/core
  *
- * Core utilities and types for Z-Payment - Framework-agnostic FHE operations
+ * Core utilities and types for shieldkit - Framework-agnostic FHE operations
  * Built on Zama's Fully Homomorphic Encryption (FHE) technology
  *
  * @example

@@ -4,7 +4,7 @@ A comprehensive React toolkit for building confidential Web3 applications using 
 
 ## Live Demo
 
-🚀 **Try it now:** [https://shieldkit.vercel.app/](https://shieldkit.vercel.app/)
+🚀 **Try it now:** [https://shieldkit-playground.vercel.app/](https://shieldkit-playground.vercel.app/)
 
 ## Key Features
 
