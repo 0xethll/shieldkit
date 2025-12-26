@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { scenarios, defaultScenario, TOKENS, type ScenarioId, type ScenarioConfig, type TokenConfig } from './scenarios'
 import { defaultTheme, type ThemeConfig, type ThemeType, type AccentColor, type RadiusSize } from './themes'
 
@@ -101,7 +102,8 @@ import { PrivacyWalletWidget } from '@shieldkit/react'`
 export interface PlaygroundState {
   // Scenario configuration
   currentScenario: ScenarioConfig
-  customTokens: TokenConfig[]
+  selectedTokens: TokenConfig[] // User-selected tokens (mainstream + custom)
+  customTokens: TokenConfig[] // User-added custom tokens (persisted)
   defaultTab: 'wrap' | 'transfer' | 'unwrap'
   features: {
     wrap: boolean
@@ -118,6 +120,8 @@ export interface PlaygroundState {
   // Actions
   setScenario: (scenarioId: ScenarioId) => void
   setTokens: (tokens: TokenConfig[]) => void
+  addToken: (token: TokenConfig) => void
+  removeToken: (tokenAddress: string) => void
   setDefaultTab: (tab: 'wrap' | 'transfer' | 'unwrap') => void
   toggleFeature: (feature: keyof PlaygroundState['features']) => void
   setThemeType: (type: ThemeType) => void
@@ -129,70 +133,118 @@ export interface PlaygroundState {
 
   // Generate code snippet
   generateCode: () => string
+
+  // Helper getters
+  getAllTokens: () => TokenConfig[] // TOKENS + customTokens
 }
 
-export const usePlaygroundConfig = create<PlaygroundState>((set, get) => ({
-  // Initial state
-  currentScenario: defaultScenario,
-  customTokens: TOKENS,
-  defaultTab: defaultScenario.defaultTab,
-  features: defaultScenario.features,
-  theme: defaultTheme,
-  isWidgetOpen: false,
+export const usePlaygroundConfig = create<PlaygroundState>()(
+  persist(
+    (set, get) => ({
+      // Initial state
+      currentScenario: defaultScenario,
+      selectedTokens: TOKENS,
+      customTokens: [], // Persisted custom tokens
+      defaultTab: defaultScenario.defaultTab,
+      features: defaultScenario.features,
+      theme: defaultTheme,
+      isWidgetOpen: false,
 
-  // Actions
-  setScenario: (scenarioId) => {
-    const scenario = scenarios[scenarioId]
-    set({
-      currentScenario: scenario,
-      customTokens: TOKENS,
-      defaultTab: scenario.defaultTab,
-      features: scenario.features,
-    })
-  },
-
-  setTokens: (tokens) => set({ customTokens: tokens }),
-
-  setDefaultTab: (tab) => set({ defaultTab: tab }),
-
-  toggleFeature: (feature) =>
-    set((state) => ({
-      features: {
-        ...state.features,
-        [feature]: !state.features[feature],
+      // Actions
+      setScenario: (scenarioId) => {
+        const scenario = scenarios[scenarioId]
+        set({
+          currentScenario: scenario,
+          defaultTab: scenario.defaultTab,
+          features: scenario.features,
+        })
       },
-    })),
 
-  setThemeType: (type) =>
-    set((state) => ({
-      theme: { ...state.theme, type },
-    })),
+      setTokens: (tokens) => set({ selectedTokens: tokens }),
 
-  setAccentColor: (accent) =>
-    set((state) => ({
-      theme: { ...state.theme, accent },
-    })),
+      addToken: (token) => {
+        const state = get()
+        const normalized = token.address.toLowerCase()
 
-  setRadiusSize: (radius) =>
-    set((state) => ({
-      theme: { ...state.theme, radius },
-    })),
+        // Check if token already exists in mainstream or custom
+        const allTokens = [...TOKENS, ...state.customTokens]
+        if (allTokens.some((t) => t.address.toLowerCase() === normalized)) {
+          throw new Error('This token already exists in your list')
+        }
 
-  openWidget: () => set({ isWidgetOpen: true }),
+        set((state) => ({
+          customTokens: [...state.customTokens, { ...token, address: normalized as any }],
+          selectedTokens: [...state.selectedTokens, { ...token, address: normalized as any }],
+        }))
+      },
 
-  closeWidget: () => set({ isWidgetOpen: false }),
+      removeToken: (tokenAddress) => {
+        const normalized = tokenAddress.toLowerCase()
+        set((state) => ({
+          customTokens: state.customTokens.filter(
+            (t) => t.address.toLowerCase() !== normalized
+          ),
+          selectedTokens: state.selectedTokens.filter(
+            (t) => t.address.toLowerCase() !== normalized
+          ),
+        }))
+      },
 
-  toggleWidget: () => set((state) => ({ isWidgetOpen: !state.isWidgetOpen })),
+      setDefaultTab: (tab) => set({ defaultTab: tab }),
 
-  generateCode: () => {
-    const state = get()
-    const { currentScenario, customTokens, defaultTab, features, theme } = state
+      toggleFeature: (feature) =>
+        set((state) => ({
+          features: {
+            ...state.features,
+            [feature]: !state.features[feature],
+          },
+        })),
 
-    // Generate different code based on integration mode
-    if (currentScenario.integrationMode === 'sidebar') {
-      return generateSidebarCode(customTokens, defaultTab, features, theme)
-    } else {
-      return generateDialogCode(customTokens, defaultTab, features, theme)
+      setThemeType: (type) =>
+        set((state) => ({
+          theme: { ...state.theme, type },
+        })),
+
+      setAccentColor: (accent) =>
+        set((state) => ({
+          theme: { ...state.theme, accent },
+        })),
+
+      setRadiusSize: (radius) =>
+        set((state) => ({
+          theme: { ...state.theme, radius },
+        })),
+
+      openWidget: () => set({ isWidgetOpen: true }),
+
+      closeWidget: () => set({ isWidgetOpen: false }),
+
+      toggleWidget: () => set((state) => ({ isWidgetOpen: !state.isWidgetOpen })),
+
+      generateCode: () => {
+        const state = get()
+        const { currentScenario, selectedTokens, defaultTab, features, theme } = state
+
+        // Generate different code based on integration mode
+        if (currentScenario.integrationMode === 'sidebar') {
+          return generateSidebarCode(selectedTokens, defaultTab, features, theme)
+        } else {
+          return generateDialogCode(selectedTokens, defaultTab, features, theme)
+        }
+      },
+
+      getAllTokens: () => {
+        const state = get()
+        return [...TOKENS, ...state.customTokens]
+      },
+    }),
+    {
+      name: 'playground-config',
+      partialize: (state) => ({
+        customTokens: state.customTokens,
+        selectedTokens: state.selectedTokens,
+        theme: state.theme,
+      }),
     }
-  },
-}))
+  )
+)

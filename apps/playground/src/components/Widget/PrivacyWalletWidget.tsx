@@ -12,12 +12,12 @@ import { motion } from 'framer-motion'
 export default function PrivacyWalletWidget() {
   const { address } = useAccount()
   const { isFHEReady } = useFHEContext()
-  const { defaultTab, features, customTokens } = usePlaygroundConfig()
+  const { defaultTab, features, selectedTokens } = usePlaygroundConfig()
 
   const [activeTab, setActiveTab] = useState<'wrap' | 'transfer' | 'unwrap'>(defaultTab)
 
   // Token balances management - now using TokenConfig[]
-  const { getBalance, updateBalance } = useTokenBalances(customTokens)
+  const { getBalance, updateBalance } = useTokenBalances(selectedTokens)
 
   // Get enabled tabs based on features
   const tabs = [
@@ -104,17 +104,17 @@ export default function PrivacyWalletWidget() {
         <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
           {activeTab === 'wrap' && (
             <WrapPanel
-              tokens={customTokens}
+              tokens={selectedTokens}
               getBalance={getBalance}
               onWrapSuccess={updateBalance}
             />
           )}
           {activeTab === 'transfer' && (
-            <TransferPanel tokens={customTokens} />
+            <TransferPanel tokens={selectedTokens} />
           )}
           {activeTab === 'unwrap' && (
             <UnwrapPanel
-              tokens={customTokens}
+              tokens={selectedTokens}
               getBalance={getBalance}
               onUnwrapSuccess={updateBalance}
             />

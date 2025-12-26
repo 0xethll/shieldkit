@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { usePlaygroundConfig } from '../../config/usePlaygroundConfig'
 import { scenarios, type ScenarioId, TOKENS, type TokenConfig } from '../../config/scenarios'
+import AddTokenModal from './AddTokenModal'
 import {
   Target,
   Coins,
@@ -9,34 +11,56 @@ import {
   Lock,
   Send,
   Download,
-  Zap
+  Plus,
+  X
 } from 'lucide-react'
 
 export default function ConfigurationPanel() {
   const {
     currentScenario,
+    selectedTokens,
     customTokens,
     defaultTab,
     features,
     theme,
     setScenario,
-    setTokens,
+    addToken,
+    removeToken,
     setDefaultTab,
     toggleFeature,
     setThemeType,
     setAccentColor,
     setRadiusSize,
     generateCode,
+    getAllTokens,
   } = usePlaygroundConfig()
 
+  const [isAddTokenModalOpen, setIsAddTokenModalOpen] = useState(false)
+
+  // Get all available tokens (mainstream + custom)
+  const allTokens = getAllTokens()
+
   const toggleToken = (token: TokenConfig) => {
-    const exists = customTokens.some((t) => t.address === token.address)
+    const exists = selectedTokens.some((t) => t.address === token.address)
 
     if (exists) {
-      setTokens(customTokens.filter((t) => t.address !== token.address))
+      removeToken(token.address)
     } else {
-      setTokens([...customTokens, token])
+      // For selected tokens, just add to selectedTokens (don't persist)
+      const state = usePlaygroundConfig.getState()
+      state.setTokens([...selectedTokens, token])
     }
+  }
+
+  const handleAddToken = (token: TokenConfig) => {
+    // addToken handles both customTokens and selectedTokens
+    addToken(token)
+  }
+
+  const handleRemoveCustomToken = (e: React.MouseEvent, tokenAddress: string) => {
+    e.stopPropagation()
+    // removeToken handles both customTokens and selectedTokens
+    removeToken(tokenAddress)
   }
 
   const copyCode = () => {
@@ -72,29 +96,83 @@ export default function ConfigurationPanel() {
 
       {/* Token Configuration */}
       <section>
-        <div className="flex items-center gap-2 mb-3">
-          <Coins className="w-4 h-4 text-primary" />
-          <h3 className="font-semibold text-sm">Token Configuration</h3>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Coins className="w-4 h-4 text-primary" />
+            <h3 className="font-semibold text-sm">Token Configuration</h3>
+          </div>
+          <button
+            onClick={() => setIsAddTokenModalOpen(true)}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md text-xs font-medium transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add Token
+          </button>
         </div>
-        <div className="space-y-2">
-          {TOKENS.map((token) => {
-            const isSelected = customTokens.some(t => t.address === token.address)
 
-            return (
-            <label
-              key={token.address}
-              className="flex items-center gap-3 p-3 bg-secondary border border-border rounded-lg cursor-pointer hover:bg-accent transition-colors"
-            >
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onChange={() => toggleToken(token)}
-                className="w-4 h-4 accent-primary"
-              />
-              <span className="text-sm font-medium">{token.symbol}</span>
-            </label>
-          
-          )})}
+        <div className="space-y-3">
+          {/* Preset tokens */}
+          {TOKENS.length > 0 && (
+            <div>
+              <div className="text-xs font-semibold text-muted-foreground mb-2">
+                Preset Tokens
+              </div>
+              <div className="space-y-2">
+                {TOKENS.map((token) => {
+                  const isSelected = selectedTokens.some(t => t.address === token.address)
+                  return (
+                    <label
+                      key={token.address}
+                      className="flex items-center gap-3 p-3 bg-secondary border border-border rounded-lg cursor-pointer hover:bg-accent transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleToken(token)}
+                        className="w-4 h-4 accent-primary"
+                      />
+                      <span className="text-sm font-medium">{token.symbol}</span>
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Custom tokens */}
+          {customTokens.length > 0 && (
+            <div>
+              <div className="text-xs font-semibold text-muted-foreground mb-2">
+                Custom Tokens
+              </div>
+              <div className="space-y-2">
+                {customTokens.map((token) => {
+                  const isSelected = selectedTokens.some(t => t.address === token.address)
+                  return (
+                    <label
+                      key={token.address}
+                      className="flex items-center gap-3 p-3 bg-secondary border border-border rounded-lg cursor-pointer hover:bg-accent transition-colors group"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleToken(token)}
+                        className="w-4 h-4 accent-primary"
+                      />
+                      <span className="text-sm font-medium flex-1">{token.symbol}</span>
+                      <button
+                        onClick={(e) => handleRemoveCustomToken(e, token.address)}
+                        className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-opacity"
+                        title="Remove token"
+                      >
+                        <X className="w-4 h-4 text-red-600 dark:text-red-400" />
+                      </button>
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -241,6 +319,13 @@ export default function ConfigurationPanel() {
         </svg>
         Copy Code
       </button>
+
+      {/* Add Token Modal */}
+      <AddTokenModal
+        isOpen={isAddTokenModalOpen}
+        onClose={() => setIsAddTokenModalOpen(false)}
+        onAdd={handleAddToken}
+      />
     </div>
   )
 }
