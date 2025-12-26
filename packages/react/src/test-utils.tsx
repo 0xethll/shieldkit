@@ -15,8 +15,8 @@ import type { FhevmInstance } from '@shieldkit/core'
  */
 export function createMockFHEInstance(): FhevmInstance {
   return {
-    createEncryptedInput: (contractAddress: string, userAddress: string) => ({
-      add64: (value: bigint) => {},
+    createEncryptedInput: (_contractAddress: string, _userAddress: string) => ({
+      add64: (_value: bigint) => {},
       encrypt: async () => ({
         handles: [new Uint8Array([1, 2, 3, 4])],
         inputProof: new Uint8Array([5, 6, 7, 8]),
@@ -76,20 +76,17 @@ export function MockFHEProvider({
   isFHEReady = true,
   fheInstance = createMockFHEInstance(),
   fheError = null,
-  signer = null,
 }: {
   children: ReactNode
   isFHEReady?: boolean
   fheInstance?: FhevmInstance | null
   fheError?: string | null
-  signer?: any
 }) {
   const contextValue: FHEContextType = {
     isFHEReady,
     fheInstance,
     fheError,
     retryFHE: () => {},
-    signer,
   }
 
   return <FHEContext.Provider value={contextValue}>{children}</FHEContext.Provider>

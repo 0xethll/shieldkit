@@ -137,4 +137,28 @@ export type {
   ThemeConfig,
 } from './themes'
 
+// Export UI Components
+export { ConfidentialWidget } from './components/ConfidentialWidget'
+export type {
+  ConfidentialWidgetProps,
+  TokenConfig,
+  WidgetFeatures,
+} from './components/types'
+
+export { default as TokenSelector } from './components/TokenSelector'
+export type { TokenSelectorProps } from './components/TokenSelector'
+
+export { default as WrapStepIndicator } from './components/WrapStepIndicator'
+export { default as QueueItem } from './components/QueueItem'
+export { default as QueueItemSkeleton } from './components/QueueItemSkeleton'
+
+// Export Panel components (for advanced customization)
+export { default as WrapPanel } from './components/WrapPanel'
+export { default as TransferPanel } from './components/TransferPanel'
+export { default as UnwrapPanel } from './components/UnwrapPanel'
+
+// Export utilities
+export { getTokenPrefix, formatErrorMessage } from './utils/helpers'
+export { useDecryptedAmounts } from './hooks/useDecryptedAmounts'
+
 export const PACKAGE_VERSION = '0.1.0'

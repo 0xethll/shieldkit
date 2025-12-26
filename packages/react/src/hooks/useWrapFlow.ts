@@ -4,7 +4,7 @@
  * Orchestrates the complete wrap flow: deploy → approve → wrap
  */
 
-import { useEffect, useMemo, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { parseUnits, type Address, type Hash } from 'viem'
 import { useWrappedTokenAddress, useFactory } from './useFactory'

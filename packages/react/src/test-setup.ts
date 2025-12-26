@@ -20,7 +20,7 @@ global.window.ethereum = {
 
 // Mock requestIdleCallback if not available
 if (!global.window.requestIdleCallback) {
-  global.window.requestIdleCallback = (callback: any, options?: any) => {
+  global.window.requestIdleCallback = (callback: any, _options?: any) => {
     const start = Date.now()
     return setTimeout(() => {
       callback({
