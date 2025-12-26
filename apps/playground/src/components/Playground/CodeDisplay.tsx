@@ -5,7 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 export default function CodeDisplay() {
-  const [isExpanded, setIsExpanded] = useState(true) // Default expanded
+  const [isExpanded, setIsExpanded] = useState(false) // Default expanded
   const [activeStep, setActiveStep] = useState(0)
   const [copiedStep, setCopiedStep] = useState<number | null>(null)
   const { generateCode } = usePlaygroundConfig()
